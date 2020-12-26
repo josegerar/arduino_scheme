@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="resources/js/jsLibrary/jquery.min.js" type="text/javascript"></script>
+
+    </head>
+    <body >
+        <div>TODO write content</div>
+        <img id="aux">
+        <input type="file" id="imgcargada"><br>
+        <button  id="rotarL"><-</button>
+        <button id="rotarR">-></button>
+        <button id="puntosx">prt</button>
+
+        <div >
+            <canvas style="border: 1px solid #000;position: absolute;" id="canvas_buffer" width="250" height="250"></canvas>
+            <canvas style="border: 1px solid #000;position: absolute;" id="canvas_buffer1" width="250" height="250"></canvas>
+        </div>
+        <script src="resources/js/jsLibrary/console.image.js" type="text/javascript"></script>
+        <script>
+            var canvasF = document.getElementById("canvas_buffer");
+            var canvasS = document.getElementById("canvas_buffer1");
+            var inputfile = document.getElementById("imgcargada")
+                    , lienzo = canvasS.getContext("2d")
+                    , DataLienzo = canvasS.getBoundingClientRect();
+            var maxim = 250;
+            var img;
+            var dataRotation = {};
+            var puntos = [];
+            inputfile.addEventListener("change", function () {
+                let fReader = new FileReader();
+                fReader.readAsDataURL(inputfile.files[0]);
+                fReader.onloadend = function (event) {
+                    img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function () {
+                        calcularTamanio(img);
+                        canvasS.width = img.width;
+                        canvasS.height = img.height;
+                        canvasF.width = img.width;
+                        canvasF.height = img.height;
+                        dataimg = {h: img.height, w: img.width};
+                        console.log("go");
+                        canvasF.getContext("2d").drawImage(img, 0, 0, img.width, img.height);
+
+                        dataRotation = {
+                            key: 0,
+                            config: [
+                                {k: 0, angle: 0, x: 0, y: 0},
+                                {k: 1, angle: (Math.PI / 2) * 1, x: 0, y: -canvasF.height},
+                                {k: 2, angle: (Math.PI / 2) * 2, x: -canvasF.width, y: -canvasF.height},
+                                {k: 3, angle: (Math.PI / 2) * 3, x: -canvasF.width, y: 0}
+                            ]
+                        };
+//                        canvasF.getContext('2d').rotate((Math.PI / 2)*3);
+//                canvasF.getContext("2d").drawImage(img, -249,
+//                        0, dataimg.w, dataimg.h);
+                    };
+                    console.log(img.src);
+
+                };
+            });
+//            lienzo.strokeStyle = "#FFEC24";
+//            lienzo.beginPath();
+//            lienzo.arc(100, 150, 3, 0, 2 * Math.PI);
+//            lienzo.fill();
+//            lienzo.stroke();
+            document.getElementById("puntosx").addEventListener("click", function () {
+                console.log(puntos);
+                console.log(canvasF.toDataURL("image/png"));
+            });
+            canvasS.addEventListener("mousemove", function (evt) {
+//                if (canvasS.pusheable === true)
+//                {
+
+                if (puntos[canvasS.keypuntito] !== undefined)
+                {
+                    //canvasS.getContext("2d").fillStyle = "white";
+                    //lienzo.fillRect(puntos[canvasS.keypuntito].x, puntos[canvasS.keypuntito].y, puntos[canvasS.keypuntito].w, puntos[canvasS.keypuntito].w);
+                    lienzo.clearRect(puntos[canvasS.keypuntito].x, puntos[canvasS.keypuntito].y, puntos[canvasS.keypuntito].w, puntos[canvasS.keypuntito].w);
+                    let mousePos = oMousePos(evt);
+                    let locationpuntito = canvasS.locationpuntito !== undefined ? canvasS.locationpuntito : {x: 0, y: 0};
+//                    console.log(locationpuntito.x);
+                    puntos[canvasS.keypuntito].x = (mousePos.x - locationpuntito.x);
+                    puntos[canvasS.keypuntito].y = (mousePos.y - locationpuntito.y);
+//                    puntos[canvasS.keypuntito].x = mousePos.x;
+//                    puntos[canvasS.keypuntito].y = mousePos.y; 
+
+                    canvasS.getContext("2d").fillStyle = "green";
+                    lienzo.fillRect(puntos[canvasS.keypuntito].x, puntos[canvasS.keypuntito].y, puntos[canvasS.keypuntito].w, puntos[canvasS.keypuntito].w);
+                    for (let index = 0; index < puntos.length; index++) {
+                        let flag = ChocanPines(puntos[canvasS.keypuntito], puntos[index]);
+                        if (flag && canvasS.keypuntito !== index)
+                        {
+                            console.log("rozó");
+                            canvasS.getContext("2d").fillStyle = "red";
+                            lienzo.fillRect(puntos[index].x, puntos[index].y, puntos[index].w, puntos[index].w);
+                            canvasS.getContext("2d").fillStyle = "green";
+                        }
+                    }
+                }
+//                    console.log(mousePos);
+//                }
+//                marcarCoords(output, mousePos.x, mousePos.y)
+            }, false);
+
+            canvasS.addEventListener("mousedown", function (evt) {
+                if (!document.getElementById("rotarL").disabled)
+                {
+                    document.getElementById("rotarL").disabled = true;
+                    document.getElementById("rotarR").disabled = true;
+                }
+
+                var mousePos = oMousePos(evt);
+                console.log("down");
+//                canvasS.pusheable = true;
+                let find = false;
+                for (var index = 0; index < puntos.length; index++) {
+                    if (Entra(mousePos.x, mousePos.y, puntos[index]) && !find)
+                    {
+                        find = true;
+                        console.log("punto seleccionado");
+                        canvasS.keypuntito = index;
+                        // here
+                        canvasS.locationpuntito = {x: mousePos.x - puntos[index].x, y: mousePos.y - puntos[index].y}
+                        canvasS.getContext("2d").fillStyle = "green";
+                        lienzo.fillRect(puntos[index].x, puntos[index].y, puntos[index].w, puntos[index].w);
+                    }
+                }
+
+
+                if (find === false)
+                {
+                    let puntito = {
+                        id: (puntos.length <= 0) ? 0 : (puntos[puntos.length - 1].id + 1),
+                        x: mousePos.x,
+                        y: mousePos.y,
+                        w: 6
+                    };
+                    canvasS.getContext("2d").fillStyle = "red";
+                    puntos.push(puntito);
+                    lienzo.fillRect(puntito.x, puntito.y, puntito.w, puntito.w);
+                    console.log("creando nuevo punto");
+                }
+            }, false);
+            
+            canvasS.addEventListener("dblclick", function(evt){
+                var mousePos = oMousePos(evt);
+                alert(mousePos.x);
+               
+            });
+            
+            canvasS.addEventListener("mouseup", function (evt) {
+                console.log("up");
+
+                if (canvasS.keypuntito !== undefined)
+                {
+//                    for (var index = 0; index < puntos.length; index++) {
+//                        if (puntos[index].id === canvasS.keypuntito)
+//                        {
+                    canvasS.getContext("2d").fillStyle = "red";
+                    lienzo.fillRect(puntos[canvasS.keypuntito].x, puntos[canvasS.keypuntito].y, puntos[canvasS.keypuntito].w, puntos[canvasS.keypuntito].w);
+//                        }
+//                    }
+//                    canvasS.pusheable = undefined;
+                    canvasS.keypuntito = undefined;
+                }
+
+
+//                marcarCoords(output, mousePos.x, mousePos.y)
+            }, false);
+
+            document.getElementById("rotarR").addEventListener("click", function () {
+
+
+                if (dataRotation.key !== 3)
+                {
+                    dataRotation.key = dataRotation.key + 1;
+                } else
+                {
+                    dataRotation.key = 0;
+                }
+                let pos = {};
+                if (dataRotation.key % 2 === 1)
+                {
+                    pos = {h: dataimg.w, w: dataimg.h};
+                } else
+                {
+                    pos = {w: dataimg.w, h: dataimg.h};
+                }
+
+                console.log(dataRotation.config[dataRotation.key]);
+                canvasF.width = pos.w + 0;
+                canvasF.height = pos.h + 0;
+                canvasS.width = pos.w + 0;
+                canvasS.height = pos.h + 0;
+                canvasF.getContext('2d').rotate(dataRotation.config[dataRotation.key].angle);
+                canvasF.getContext("2d").drawImage(img,
+                        dataRotation.config[dataRotation.key].x,
+                        dataRotation.config[dataRotation.key].y,
+                        dataimg.w, dataimg.h);
+
+
+                console.log("Rot");
+//                document.getElementById("aux").src = canvasF.toDataURL("image/png");
+//                document.getElementById("aux").width =  pos.w;
+//                document.getElementById("aux").height = pos.h;
+            });
+            document.getElementById("rotarL").addEventListener("click", function () {
+
+                if (dataRotation.key !== 0)
+                {
+                    dataRotation.key = dataRotation.key - 1;
+                } else
+                {
+                    dataRotation.key = 3;
+                }
+                let pos = {};
+                if (dataRotation.key % 2 === 1)
+                {
+                    pos = {h: dataimg.w, w: dataimg.h};
+                } else
+                {
+                    pos = {w: dataimg.w, h: dataimg.h};
+                }
+                console.log(dataRotation.config[dataRotation.key]);
+                canvasF.width = pos.w + 0;
+                canvasF.height = pos.h + 0;
+                canvasS.width = pos.w + 0;
+                canvasS.height = pos.h + 0;
+                canvasF.getContext('2d').rotate(dataRotation.config[dataRotation.key].angle);
+                canvasF.getContext("2d").drawImage(img,
+                        dataRotation.config[dataRotation.key].x,
+                        dataRotation.config[dataRotation.key].y,
+                        dataimg.w, dataimg.h);
+
+
+//                document.getElementById("aux").src = canvasF.toDataURL("image/png");
+//                document.getElementById("aux").width =  pos.w;
+//                document.getElementById("aux").height = pos.h;
+            });
+
+
+            function calcularTamanio(img)
+            {
+                let porcentaje;
+                if (img.height > img.width)
+                {
+                    porcentaje = escalar(img.height, maxim, 10, 0);
+                } else
+                {
+                    porcentaje = escalar(img.width, maxim, 10, 0);
+                }
+                img.height = (img.height * porcentaje) / 100;
+                img.width = (img.width * porcentaje) / 100;
+                console.log("ok" + img.width);
+            }
+            function escalar(h, limit, unit, mount)
+            {
+                if (unit < 0.0001)
+                {
+                    return mount;
+                }
+                let flag = true, i = 0, val = 0;
+                while (flag && i < 1000) {
+                    if ((h * (mount + (i * unit)) / 100) <= limit && h * ((mount + ((i + 1) * unit)) / 100) > limit)
+                    {
+                        val = (i * unit);
+                        flag = false;
+                    }
+                    i++;
+                }
+
+                return escalar(h, limit, unit / 10, mount + val);
+            }
+
+            //------------------
+
+
+            function oMousePos(evt) {
+                var ClientRect = canvasS.getBoundingClientRect();
+                return {//objeto
+                    x: Math.round(evt.clientX - ClientRect.left),
+                    y: Math.round(evt.clientY - ClientRect.top)
+                };
+//                return {//objeto
+//                    x: evt.clientX - ClientRect.left,
+//                    y: evt.clientY - ClientRect.top
+//                };
+            }
+
+            function Entra(x, y, pin)
+            {
+                return rango(x, pin.x, pin.x + pin.w) && rango(y, pin.y, pin.y + pin.w);
+            }
+            function rango(dato, min, max)
+            {
+                return dato >= min && dato <= max;
+            }
+
+            function ChocanPines(pin, pin2)
+            {
+                let mx = pin.x;
+                let my = pin.y;
+
+                let mx2 = pin2.x;
+                let my2 = pin2.y;
+
+                if (
+                        ((mx >= mx2 && mx <= mx2 + pin2.w) &&
+                                (my >= my2 && my <= my2 + pin2.w)
+                                ) || (
+                        (mx + pin.w >= mx2 && mx <= mx2 + pin2.w) &&
+                        (my + pin.wt >= my2 && my <= my2 + pin2.w)
+                        ))
+                {
+                    return true;
+                }
+                return false;
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title> Not Verified Page</title>
+        <link rel="shortcut icon" href="resources/img/icono.ico">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="resources/css/cssLibrary/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/open-iconic-bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/styleIndex.css" rel="stylesheet" type="text/css"/>
+
+        <script src="resources/js/jsLibrary/jquery.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/bootstrap.min.js" type="text/javascript"></script>
+        <!--        <script src="resources/js/jsLibrary/gojs.js" type="text/javascript"></script>
+                <script src="resources/js/jsLibrary/toastr.min.js" type="text/javascript"></script>
+                <script src="resources/js/jsAlertPersonalize.js" type="text/javascript"></script>
+                <script src="resources/js/0_global.js" type="text/javascript"></script>-->
+        <style>
+            #lista3 {
+                counter-reset: li; 
+                list-style: none; 
+                *list-style: decimal; 
+                font: 15px 'trebuchet MS', 'lucida sans';
+                padding: 0;
+                margin-bottom: 4em;
+                text-shadow: 0 1px 0 rgba(255,255,255,.5);
+            }
+
+            #lista3 ol {
+                margin: 0 0 0 2em; 
+            }
+
+            #lista3 li{
+                position: relative;
+                display: block;
+                padding: .4em .4em .4em .8em;
+                *padding: .4em;
+                margin: .5em 0 .5em 2.5em;
+                background: #ddd;
+                color: #444;
+                text-decoration: none;
+                transition: all .3s ease-out;   
+            }
+
+            #lista3 li:hover{
+                background: #eee;
+            }   
+
+            #lista3 li:before{
+                content: counter(li);
+                counter-increment: li;
+                position: absolute; 
+                left: -2.5em;
+                top: 50%;
+                margin-top: -1em;
+                background: #fa8072;
+                height: 2em;
+                width: 2em;
+                line-height: 2em;
+                text-align: center;
+                font-weight: bold;
+            }
+
+            #lista3 li:after{
+                position: absolute; 
+                content: '';
+                border: .5em solid transparent;
+                left: -1em;
+                top: 50%;
+                margin-top: -.5em;
+                transition: all .3s ease-out;               
+            }
+
+            #lista3 li:hover:after{
+                left: -.5em;
+                border-left-color: #fa8072;             
+            }
+        </style>
+    </head>
+    <body>
+        <div class="menu-header-home">
+            <div class="container">
+                <img class="logoDuvca-home" src="resources/img/logoEC04.png"  width="170" height="50"/>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <a class="nav-link itemDuvca" href="index.html"> <strong> HOME</strong></a>
+                    </li>
+                    <!--                                    <li class="nav-item">
+                                                            <h4 style="margin-top: -5px; margin-right: 5px"><a id="rolUser" href="#" class="badge badge-pill badge-success">rol</a></h4>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <h4 style="margin-top: -5px"><a id="nameUser01" href="#" class="badge badge-pill badge-light"> xxx-xxx </a></h4>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a href="#" class="nav-link">
+                                                                <div class="dropdown">
+                                                                    <button style="border-radius: 100px !important; height: 30px; width: 30px; margin-top: -20px" class="btn btn-primary dropdown" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        <img id="imgUser01" style="background: white; border-radius: 50%; margin-top: -10px; margin-left: -13px" src="resources/img/createAccount.png" width="30" height="30">
+                                                                    </button>
+                                                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                                                                        <button class="dropdown-item" type="button">Settings</button>
+                                                                        <button id="btnLogOff" class="dropdown-item" type="button">Log off</button>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>-->
+                </ul>
+            </div>
+        </div>
+        <div style="margin-top: 20px" class="container"> 
+
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Welcome to the Information!</h4>
+                <p>This section offers help in the handling of the web application, the central idea of this section is to break the accessibility 
+                    barriers detailed by the WC3.</p>
+                <hr>
+                <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+            </div>
+
+            <h3><span class="badge badge-pill badge-primary">How can I register ?</span></h3>
+
+            <div class="card">
+                <div class="card-header">
+                    In order to register you must follow the steps below
+                </div>
+                <div style="margin-bottom: -45px" class="card-body">
+                    <blockquote class="blockquote mb-0">
+
+                        <ol id="lista3">
+                            <li>You must have a username, with which you will enter the web application. </li>
+                            <li>You need to enter your full name. </li>
+                            <li>You must have an email, in which an account verification email will be sent to you. </li>
+                            <li> You need to put your phone number or conventional number for the customer to contact you. </li>
+                        </ol>
+                    </blockquote>
+                </div>
+            </div>
+
+        </div> 
+    </body>
+</html>

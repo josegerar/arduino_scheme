@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html ng-app="app" lang="en">
+    <head>
+        <title>Home</title>
+        <link rel="shortcut icon" href="resources/img/icono.ico">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="resources/css/cssLibrary/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/open-iconic-bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/styleIndex.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/toastr.min.css" rel="stylesheet" type="text/css"/>
+
+        <script src="resources/js/jsLibrary/angular.js" type="text/javascript"></script>    
+        <script src="resources/js/jsLibrary/jquery.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/popper.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/bootstrap.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/sweetalert.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/toastr.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/axios.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/loading.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/store2.min.js" type="text/javascript"></script>
+        <script src="resources/js/0_global.js" type="text/javascript"></script>
+        <script src="resources/js/jsAlertPersonalize.js" type="text/javascript"></script>
+        <style>
+            #editorCode{
+                height:100%;
+                min-height:43.6vh;
+                width: 100%;
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body ng-controller="controllerHome">
+
+        <!-- modal para observar el codigo del proyecto y descargarlo -->
+        <div class="modal fade" id="modalCode" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Code</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <a style="margin-bottom: 10px" href="#" id="btnDownload" download="code.INO" class="badge badge-pill badge-success"> <span class="oi oi-data-transfer-download"></span> Download</a>
+
+                        <div id="editorCode" style="width: 100%; border: 1px solid #DDE0E6; height: 50vh; background: white">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal para observar los usuarios unidos a ese proyecto -->
+        <div class="modal fade" id="modalUsersJoinShare" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Join Users</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-sm table-bordered table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Permit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="domusersJoinProjects in usersJoinProjects">
+                                    <th scope="row">{{domusersJoinProjects.id_user}} </th>
+                                    <td>{{domusersJoinProjects.name_user}} {{domusersJoinProjects.lastname_user}}</td>
+                                    <td>{{domusersJoinProjects.email_user}}</td>
+                                    <td>
+                                        <span ng-show="domusersJoinProjects.description_permitmaster === 'ROOT'" class="badge badge-success"> {{domusersJoinProjects.description_permitmaster}} </span>
+                                        <select ng-click="newPermit($index)" disabled="" id="select{{domusersJoinProjects.id_user}}" ng-show="domusersJoinProjects.description_permitmaster !== 'ROOT'" class="form-control form-control-sm">
+                                            <option value="{{domusersJoinProjects.description_permitmaster}}">{{domusersJoinProjects.description_permitmaster}}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal para observar los usuarios unidos a ese proyecto -->
+        <div class="modal fade" id="modalUsersJoin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Join Users</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-sm table-bordered table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Permit</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="domusersJoinProjects in usersJoinProjects">
+                                    <th scope="row">{{domusersJoinProjects.id_user}} </th>
+                                    <td>{{domusersJoinProjects.name_user}} {{domusersJoinProjects.lastname_user}}</td>
+                                    <td>{{domusersJoinProjects.email_user}}</td>
+                                    <td>
+                                        <span ng-show="domusersJoinProjects.description_permitmaster === 'ROOT'" class="badge badge-success"> {{domusersJoinProjects.description_permitmaster}} </span>
+                                        <select ng-click="newPermit($index)" id="select{{domusersJoinProjects.id_user}}" ng-show="domusersJoinProjects.description_permitmaster !== 'ROOT'" class="form-control form-control-sm">
+                                            <option value="{{domusersJoinProjects.description_permitmaster}}">{{domusersJoinProjects.description_permitmaster}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a ng-click="updatePermit($index)" ng-show="domusersJoinProjects.description_permitmaster !== 'ROOT'" href="#" class="badge badge-primary"> <span class="oi oi-pencil"></span> </a>
+                                        <a ng-click="deleteUserJoin($index)" ng-show="domusersJoinProjects.description_permitmaster !== 'ROOT'" href="#" class="badge badge-danger"> <span class="oi oi-circle-x"></span> </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal para agregar un nuevo proyecto -->
+        <div class="modal fade" id="modalNamePorject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Project</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label "> Project name: </label>
+                            <input maxlength="30" id="projectName" class="form-control" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label"> Description: </label>
+                            <textarea id="projectDescription" class="form-control "> </textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btnBorde" data-dismiss="modal">Cancel</button>
+                        <button id="btnSaveProject" type="button" class="btn btn-primary btnBorde">Save project</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal para confirmar un proyecto compartido -->
+        <div class="modal fade" id="modalConfirmShareProject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm shared project</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label"> Project code: </label>
+                            <input maxlength="10" id="codeShareProject" class="form-control " type="text">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btnBorde" data-dismiss="modal">Cancel</button>
+                        <button id="btnConfirmProject" type="button" class="btn btn-primary btnBorde">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal para crear un nuevo sistema IOT (circuito) -->
+        <div class="modal fade" id="modalNewSystemIOT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New System IOT</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label "> System name: </label>
+                            <input maxlength="40" id="nameSystem" class="form-control " type="text">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label col-form-label-sm"> Description: </label>
+                            <textarea id="descriptionSystem" class="form-control "></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btnBorde" data-dismiss="modal">Cancel</button>
+                        <button id="btnSaveSystem" type="button" class="btn btn-primary btnBorde">Save system</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal para compartir el proyecto con quien quiera -->
+        <div class="modal fade" id="modalSharePorject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Share Project</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input id="txtemail" type="text" class="form-control" placeholder="Email...">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <select id="cbxPermit" class="form-control ">
+                                    <option selected="" >Permit...</option>
+                                    <option>ADMIN</option>
+                                    <option>READ</option>
+                                    <option>WRITE</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <a style="padding: 8px 12px 8px 12px !important" id="addEmailShareProject" href="#" class="badge badge-primary"> Add </a>
+                            </div>
+
+                            <table class="table table-sm table-bordered table-hover" ng-show="tableEmailShareProjects.length > 0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Permit</th>
+                                        <th style="text-align: center" scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="viewEmailShareProject in tableEmailShareProjects">
+                                        <td>{{viewEmailShareProject.email}}</td>
+                                        <td>{{viewEmailShareProject.permit}}</td>
+                                        <td style="text-align: center">
+                                            <a href="#" class="badge badge-danger" data-toggle="tooltip" data-placement="top" title="Remove"><span class="oi oi-circle-x"></span></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btnBorde" data-dismiss="modal">Cancel</button>
+                        <button id="btnModalShareProject" type="button" class="btn btn-primary btnBorde">Share project</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-header-home">
+            <div class="container">
+                <img class="logoDuvca-home" src="resources/img/logoEC04.png"  width="170" height="50"/>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <h4 style="margin-top: -5px; margin-right: 5px"><a id="rolUser" href="#" class="badge badge-pill badge-success">rol</a></h4>
+                    </li>
+                    <li class="nav-item">
+                        <h4 style="margin-top: -5px"><a id="nameUser01" href="#" class="badge badge-pill badge-light"> xxx-xxx </a></h4>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-link">
+                            <div class="dropdown">
+                                <button style="border-radius: 100px !important; height: 30px; width: 30px; margin-top: -20px" class="btn btn-primary dropdown" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img id="imgUser01" style="background: white; border-radius: 50%; margin-top: -10px; margin-left: -13px" src="resources/img/createAccount.png" onerror="this.src='resources/img/createAccount.png'" width="30" height="30">
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                                    <button ng-click="OpenmodalUser(1)" class="dropdown-item">
+                                        <span class="oi oi-image" style="margin-right: 10px;"></span>User Picture
+                                    </button>
+                                    <button ng-click="OpenmodalUser(0)" class="dropdown-item">
+                                        <span class="oi oi-person" style="margin-right: 10px;"></span>Data User
+                                    </button>
+                                    <hr style="margin-top: 2px;margin-bottom: 3px;">
+                                    <button id="btnLogOff" class="dropdown-item">
+                                        <span class="oi oi-share-boxed" style="margin-right: 10px;"></span>
+                                        Log off
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div style="margin-top: 40px" class="container">  
+            <div class="row" style="margin-bottom: 20px">
+                <div  class="col-3">
+                    <div class="menu-home">
+                        <img id="imgUser02" style="background: white; border-radius: 50%; margin-top: 15px; margin-bottom: 10px; border: 1px solid #DFDFDF" src="resources/img/createAccount.png" onerror="this.src='resources/img/createAccount.png'" width="100" height="100">
+                        <h5> <a id="nameUser02" href="#" class="badge badge-pill badge-success">xxx-xxx</a> </h5>
+                        <hr>
+                        <h6 style="float: left; margin-left: 10px"> <a href="#" class="badge badge-pill badge-success">Components</a> </h6>
+                        <div style="padding: 0px 10px 0px 10px" class="form-group"> 
+                            <button id="btnItems" style="width: 93%;" type="button" class="btn btn-light btnBorde">Components </button>
+                        </div>
+                        <div style="padding: 0px 10px 0px 10px" class="form-group"> 
+                            <button id="btnNewItems" style="width: 93%;" class="btn btn-light btnBorde" >Approve Components </button>
+                        </div>
+                        <h6 style="float: left; margin-left: 10px"> <a href="#" class="badge badge-pill badge-success">Projects</a> </h6>
+                        <div class="form-group"> 
+                            <button id="back02" style="width: 93%;" type="button" class="btn btn-light btnBorde">Projects <span class="badge badge-pill badge-light">{{dataProjects.length}}</span> </button>
+                        </div>
+                        <div class="form-group"> 
+                            <button id="loadSharedProjects" style="width: 93%;" type="button" class="btn btn-light btnBorde">Shared Projects
+                                <span data-toggle="tooltip" data-placement="top" title="Projects to be confirmed" class="badge badge-pill badge-warning">{{dataShareProjects.length}}</span>
+                                <span data-toggle="tooltip" data-placement="top" title="Confirmed projects" class="badge badge-pill badge-success">{{dataShareProjectsConfirm.length}}</span>
+                            </button>
+                        </div>
+                        <button id="btnNewProject" type="button" class="btn btn-primary btnBorde"> <span style="color: white" class="oi oi-plus"></span> New project </button>
+                        <!--button type="button" class="btn btn-danger btnBorde"> <span class="oi oi-link-intact"></span> Join </button-->
+
+                        <div id="moduleCircuits" style="display: none">
+                            <hr>
+
+                            <h6 style="float: left; margin-left: 10px"> <a id="menuSIOT" href="#" class="badge badge-pill badge-success">Systems IoT</a> </h6>
+                            <div class="form-group">
+                                <button style="width: 93%; border-radius: 30px" type="button" class="btn btn-light">Systems IOT <span class="badge badge-pill badge-light">{{dataSystemIot.length}}</span> </button>
+                            </div>
+                            <button id="btnNewSystem" type="button" class="btn btn-primary btnBorde"> <span style="color: white" class="oi oi-plus"></span> New System IoT </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div  class="col-9">
+
+                    <div id="project">
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">Projects</h4>
+                            <p>Create projects to store different versions of IoT systems related to the topic of your project.</p>
+                            <hr>
+                            <p class="mb-0">Good luck in your research !</p>
+                        </div>
+
+                        <div ng-show="dataProjects.length === 0" style="text-align: center"> 
+                            <img width="600" height="430" src="resources/img/notData.png"/>
+                        </div>
+
+                        <div class="row" style="margin-top: -10px; margin-bottom: 20px">
+                            <div class="col-sm-6" style="margin-top: 20px" ng-repeat="domdataProjects in dataProjects">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{domdataProjects.name_project}}</h5>
+                                        <p class="card-text">
+                                            <strong> Description: </strong>
+                                            {{domdataProjects.description_project}} <br>
+                                            <strong> Creation date: </strong> <span>{{domdataProjects.creationdate_project}}</span>
+                                        </p>
+                                        <a ng-click="btnOpenProject($index)" href="#" class="btn btn-light btnBorde">Open</a>
+                                        <button ng-click="userJoinsProjects($index)" type="button" class="btn btn-light btnBorde" data-toggle="tooltip" data-placement="top" title="Join Users">
+                                            <span class="oi oi-people"></span>
+                                        </button>
+                                        <button ng-click="btnShareProject($index)" type="button" class="btn btn-outline-primary btnBorde" data-toggle="tooltip" data-placement="top" title="Share Project">
+                                            <span class="oi oi-share"></span>
+                                        </button>
+                                        <button ng-click="deleteProjects($index)" type="button" class="btn btn-outline-danger btnBorde" data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <span class="oi oi-trash"></span>
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="circuitProjects" style="display: none">
+                        <div class="alert alert-success" role="alert">
+                            <h4 id="nameProject" class="alert-heading">xxx - xxx</h4>
+                            <p></p>
+                            <hr>
+                            <p class="mb-0"><span><strong> Permit: </strong></span> <span id="permitProject" class="badge badge-pill badge-info">XXX</span></p>
+                        </div>
+                        <h4> <a href="#" id="back" class="badge badge-pill badge-success" style="float: right"> Back to projects </a> </h4>
+                        <button id="btnNewSystem01" type="button" class="btn btn-primary btnBorde"> <span style="color: white" class="oi oi-plus"></span> New System IoT </button>
+
+                        <div ng-show="dataSystemIot.length === 0" style="text-align: center; margin-top: 10px"> 
+                            <img width="600" height="430" src="resources/img/notData.png"/>
+                        </div>
+
+                        <div class="row" style="margin-top: -10px; margin-bottom: 20px">
+                            <div class="col-sm-6" style="margin-top: 20px" ng-repeat="domDataSystemIot in dataSystemIot">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{domDataSystemIot.name_job}}</h5>
+                                        <p class="card-text">
+                                            <strong> Description: </strong> {{domDataSystemIot.commit_job}} <br>
+                                            <strong> Last modification: </strong> <span> {{domDataSystemIot.lastmodification_job}} </span>
+                                        </p>
+                                        <button ng-click="updateSystem($index)" type="button" class="btn btn-outline-primary btnBorde" data-toggle="tooltip" data-placement="top" title="Update">
+                                            <span class="oi oi-pencil"></span>
+                                        </button>
+                                        <button ng-click="openCodeSystem($index)" type="button" class="btn btn-outline-dark btnBorde" data-toggle="tooltip" data-placement="top" title="Code">
+                                            <span class="oi oi-code"></span>
+                                        </button>
+                                        <button ng-click="deleteSystem($index)" type="button" class="btn btn-outline-danger btnBorde" data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <span class="oi oi-trash"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="shareProjectsData" style="display: none">
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">Share Projects</h4>
+                            <p>Work on other users' projects, teamwork is much better.</p>
+                            <hr>
+                            <p class="mb-0">Good luck in your research !</p>
+                        </div>
+
+                        <span></span> <span class="badge badge-pill badge-warning">Projects to be confirmed</span> <br>
+
+                        <div ng-show="dataShareProjects.length === 0" style="text-align:  center">
+                            <img width="270" height="250" src="resources/img/notConfirmed.png"/>
+                        </div>
+
+                        <div class="row" style="margin-top: -10px">
+                            <div class="col-sm-6" style="margin-top: 20px" ng-repeat="domDataShareProjects in dataShareProjects">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{domDataShareProjects.name_project}}</h5>
+                                        <p class="card-text">
+                                            <strong>Description project:  </strong> {{domDataShareProjects.description_project}}  <br>
+                                            <strong>Last modification: </strong> <span> {{domDataShareProjects.creationdate_project}} </span> <br>
+                                            <span><strong> Permit: </strong></span> <span class="badge badge-pill badge-info">{{domDataShareProjects.description_permitmaster}}</span>
+                                        </p>
+                                        <button ng-click="btnConfirm($index)" type="button" class="btn btn-outline-danger btnBorde" >
+                                            Confirm
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <span></span> <span style="margin-top: 10px" class="badge badge-pill badge-success">Confirmed projects</span>
+
+                        <div ng-show="dataShareProjectsConfirm.length === 0" style="text-align: center">
+                            <img width="280" height="250" src="resources/img/noProjects.png"/>
+                        </div>
+
+                        <div class="row" style="margin-top: -10px; margin-bottom: 20px">
+                            <div class="col-sm-6" style="margin-top: 20px" ng-repeat="domDataShareProjectsConfirm in dataShareProjectsConfirm">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{domDataShareProjectsConfirm.name_project}}</h5>
+                                        <p class="card-text">
+                                            <strong>Description project: </strong> {{domDataShareProjectsConfirm.description_project}} <br>
+                                            <strong>Last modification: </strong> <span> {{domDataShareProjectsConfirm.creationdate_project}} </span> <br>
+                                            <span><strong> Permit: </strong></span> <span class="badge badge-pill badge-info">{{domDataShareProjectsConfirm.description_permitmaster}}</span>
+                                        </p>
+                                        <a ng-click="btnOpenShareProject($index)" href="#" class="btn btn-light btnBorde">Open</a>
+                                        <button ng-click="userJoinsProjectsShare($index)" type="button" class="btn btn-light btnBorde" data-toggle="tooltip" data-placement="top" title="Join Users">
+                                            <span class="oi oi-people"></span>
+                                        </button>
+                                        <button ng-click="shareProjectShare($index)" type="button" class="btn btn-outline-primary btnBorde" data-toggle="tooltip" data-placement="top" title="Share Project">
+                                            <span class="oi oi-share"></span>
+                                        </button>
+                                        <button ng-click="deleteProjectsSahre($index)" type="button" class="btn btn-outline-danger btnBorde" data-toggle="tooltip" data-placement="top" title="Remove for me">
+                                            <span class="oi oi-trash"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalusermodify" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modify data</h5>
+                        <button type="button" class="close" data-dismiss="modal"><img src="resources/img/close.png" width="15" height="15" alt="X "/></button>
+                    </div>
+                    <div class="modal-body">
+                        <!--                        <a class="btn btn-light" ng-click="modalrecuperateacount(0)">User Image</a>
+                                                <a class="btn btn-light" ng-click="modalrecuperateacount(1)">I have a code</a>-->
+                        <!--<div class="dropdown-divider" ng-show="flagmodalusermodify===0"></div>-->
+                        <div  ng-show="flagmodalusermodify === 1">
+                            <div class="form-group" style="background-color: #FFDC00;border-radius:5px;padding: 5px 15px 5px 15px;">
+                                <p style="margin-bottom: 0px; font-size: 11px;">It is preferable that the image be of square dimensions.</p>
+                            </div>
+                            <div class="form-group">  
+                                <label for="picture_usermodify" class="form-control btn btn-outline-secondary"> <span class="oi oi-image"></span> Select Picture </label>
+                                <input type="file" id="picture_usermodify" style="display: none;">
+                            </div>
+                            <div class="form-group" align="center">  
+                                <img id="bufferimage_usermodify" src="resources/img/createAccount.png" onerror="this.src='resources/img/createAccount.png'" alt="userImage" width="150" height="150" style="border: 1px solid #DFDFDF;">
+                                <input type="hidden" id="urlimg_usermodify">
+                            </div>
+                            <div align="center">
+                                <hr style="width:200px; margin-top: -5px; margin-bottom: 7px;">
+                                <button id="btn_usermodify_img" class="btn btn-outline-info btn-group">
+                                    <span id="loading_usermodify_img" style="display: none;"><span class="spinner-border spinner-border-sm"></span></span>
+                                    <span id="unloading_usermodify_img" class="oi oi-cloud-upload" style="padding-top: 5px;"></span>
+                                    <span style="padding-left: 5px;">Save Changes</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div ng-show="flagmodalusermodify === 0">
+                            <div class="form-group" style="background-color: #FFDC00;border-radius:5px;padding: 5px 15px 5px 15px;">
+                                <p style="margin-bottom: 0px; font-size: 11px;">The parameters have to comply with a pattern to be valid. <br>Example email: "foo-bar.baz@example.com", Example number phone: "0915078725"</p>
+                            </div>
+                            <div class="form-group">
+                                <label> Names: </label>
+                                <input type="text" id="names_usermodify" class="form-control">
+                            </div>
+                            <div class="form-group">  
+                                <label> Last Names: </label>
+                                <input type="text" id="lastnames_usermodify" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label> Email: </label>
+                                <input type="text" id="email_usermodify" class="form-control">
+                            </div>
+                            <div class="form-group">  
+                                <label> Phone Number: </label>
+                                <input type="text" id="phone_usermodify" class="form-control">
+                            </div>
+                            <div align="center">
+                                <hr style="width:200px; margin-top: -5px; margin-bottom: 7px;">
+                                <button id="btn_usermodify" class="btn btn-outline-info btn-group">
+                                    <span id="loading_usermodify" style="display: none;"><span class="spinner-border spinner-border-sm"></span></span>
+                                    <span id="unloading_usermodify" class="oi oi-cloud-upload" style="padding-top: 5px;"></span>
+                                    <span style="padding-left: 5px;">Save Data</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--                    <div class="modal-footer align-self-center">
+                                            <button id="btn_requestcode" class="btn btn-outline-info form-control">
+                                                <span id="loading_usermodify" class="spinner-border spinner-border-sm" style="display: none;"></span>
+                                                <span class="oi oi-cloud-upload"></span> Save Changes
+                                            </button>
+                                        </div>-->
+                </div>
+
+            </div>
+        </div>
+
+        <script src="resources/js/jsHome.js" type="text/javascript"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.1/ace.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/ace/mode-c_cpp.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/ace/ext-modelist.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/ace/ext-language_tools.js" type="text/javascript"></script>
+
+    </body>
+</html>

@@ -1,0 +1,102 @@
+/*AUTOR: CARVAJAL*/
+*{
+    margin: 0px;
+    padding: 0px;
+    /*font-family: 'Nunito', sans-serif;*/
+}
+
+/*clase para colocar la imagen de fondo*/
+.content-header{
+    margin: auto;
+    width: 100%;
+    position: relative;
+    background-image: url(../img/fondoIndex.jpg);
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+}
+
+/*clase para estilos del menu*/
+.menu-header{
+    height: 100px;
+    padding: 30px 0px 50px 0px;
+    background: #0082D7;
+}
+
+/*estilos para el div que tiene el titulo de la app*/
+.title-header{
+    margin-right: auto;
+    margin-left: auto;
+    padding: 100px;
+    text-align: center;
+}
+
+/*Estilo para el boton de iniciar sesion*/
+.aLogin{
+    border: 2px solid #0082D7;
+    padding: 10px 50px 10px 50px;
+    border-radius: 50px;
+    font-weight: 900
+}
+
+.aLogin:hover{
+    text-decoration: none;
+    -webkit-box-shadow: 0px 0px 82px -7px rgba(0,130,215,1);
+    -moz-box-shadow: 0px 0px 82px -7px rgba(0,130,215,1);
+    box-shadow: 0px 0px 82px -7px rgba(0,130,215,1);
+}
+/*items del menu de informacion*/
+.itemDuvca{
+    color: white !important
+}
+
+.itemDuvca:hover{
+    background: white;
+    border-radius: 50px;
+    color: #0082D7 !important
+}
+
+/*estilo para el logo de la app*/
+.logoDuvca{
+    position: absolute; margin-top: -5px;cursor: pointer; width: 145px !important
+}
+
+/*estilo para el boton crear cuenta de la pagina login.html*/
+
+.btnCreateAccount{
+    float: right;
+    border: 2px solid #0082D7;
+    padding: 10px 50px 10px 50px;
+    border-radius: 50px;
+    font-weight: 900;
+    background: white;
+}
+
+.btnCreateAccount:hover{
+    -webkit-box-shadow: 0px 0px 82px -7px rgba(0,130,215,1);
+    -moz-box-shadow: 0px 0px 82px -7px rgba(0,130,215,1);
+    box-shadow: 0px 0px 82px -7px rgba(0,130,215,1);
+}
+
+/*estilos para el header de la pagina de inicio del usuario*/
+.menu-header-home{
+    height: 80px;
+    padding: 30px 0px 50px 0px;
+    background: #0082D7;
+}
+
+.logoDuvca-home{
+    position: absolute; margin-top: -15px;cursor: pointer;width: 145px !important
+}
+
+.menu-home{
+    width: 100%; border: 0.5px solid #C9CBCF; border-radius: 15px; text-align: center; padding: 0px 0px 20px 0px;-webkit-box-shadow: 2px 1px 6px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 1px 6px -1px rgba(0,0,0,0.75);
+    box-shadow: 2px 1px 6px -1px rgba(0,0,0,0.75);
+}
+
+.btnBorde{
+    border-radius: 30px !important;
+}

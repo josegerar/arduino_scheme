@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html ng-app="app">
+    <head>
+        <title>Components</title>
+        <link rel="shortcut icon" href="resources/img/icono.ico">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="resources/css/cssLibrary/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/open-iconic-bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/styleIndex.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/toastr.min.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/animate.min.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/codemirror.css" rel="stylesheet" type="text/css"/>
+
+        <script src="resources/js/jsLibrary/angular.js" type="text/javascript"></script>    
+        <script src="resources/js/jsLibrary/jquery.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/popper.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/bootstrap.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/sweetalert.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/toastr.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/loading.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/axios.min.js" type="text/javascript"></script>
+
+        <script src="resources/js/jsLibrary/jquery.nicescroll.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/intense.js" type="text/javascript"></script>
+
+        <script src="resources/js/jsLibrary/codemirror.js" type="text/javascript"></script>
+        <link href="resources/css/cssLibrary/codemirror.css" rel="stylesheet" type="text/css"/>
+        <script src="resources/mode/clike/clike.js" type="text/javascript"></script>
+
+        <script src="resources/js/jsLibrary/store2.min.js" type="text/javascript"></script>
+        <script src="resources/js/0_global.js" type="text/javascript"></script>
+        <script src="resources/js/jsAlertPersonalize.js" type="text/javascript"></script>
+
+        <style>
+            .inputstyle{
+                padding-left: 2px;
+                padding-right: 2px;
+                border-radius: 8px;
+                width:90%;
+                border-color:whitesmoke;
+            }
+
+            .modalDuvcaBase{
+                width: 100%; height:100vh; text-align: center;background-color:rgba(0,0,0,0.5); 
+                position: absolute; display: none; position: fixed; z-index: 10
+            }
+
+            .modalDetails{
+                width: 900px;
+                height: 500px;
+                margin-right: auto;
+                margin-left: auto;
+                z-index: 10;
+                position: relative;
+                margin-top: 15vh;
+                border-radius: 30px;
+                -webkit-box-shadow: 0px 0px 19px -5px rgba(0,0,0,1);
+                -moz-box-shadow: 0px 0px 19px -5px rgba(0,0,0,1);
+                box-shadow: 0px 0px 19px -5px rgba(0,0,0,1);
+            }
+
+            .imgDetails{
+                width: 50%; float: left; height: 500px; border-bottom-left-radius: 30px; border-top-left-radius: 30px;
+                background: white;overflow: auto;padding: 30px 5px 30px 5px;
+            }
+
+            .detailsDiv{
+                width: 50%; float: right; height: 500px; border-bottom-right-radius: 30px; border-top-right-radius: 30px;
+                background: white; padding: 20px; text-align: left
+            }
+
+            .closeDuvca{
+                float: right;
+                border-radius: 5px !important;
+                background: white !important;
+                cursor: pointer;
+                font-size: 12px;
+                padding: 5px;
+                border-style: none;
+
+            }
+
+            .closeDuvca:hover{
+                background: red !important;
+                color: white;
+            }
+            .pux{
+                position: relative;
+            }
+
+        </style>
+
+    </head>
+    <body ng-controller="controllerComponents">
+
+        <div class="modal fade" id="modalSizeComponent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Size Component</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label> Width(px): </label>
+                                    <input min="200" max="600" id="inputWidth" class="form-control" type="number"/>
+                                </div>  
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label> Heigth(px): </label>
+                                    <input min="200" max="600" id="inputHeigth" class="form-control" type="number"/>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btnBorde" data-dismiss="modal">Cancel</button>
+                        <button id="btnSaveSize" type="button" class="btn btn-primary btnBorde">Save Size</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="modalDataPort" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New parameter</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label> Name port: </label>
+                                    <input id="namePort" class="form-control" type="text"/>
+                                </div>  
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label> Position X: </label>
+                                    <input id="posX" readonly="" class="form-control" type="text"/>
+                                </div>  
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label> Position Y: </label>
+                                    <input id="posY" readonly="" class="form-control" type="text"/>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div style="text-align: center" class="col-4">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="typeEnergy" value="option1">
+                                    <label class="form-check-label" for="inlineCheckbox1">Energy</label>
+                                </div> 
+                            </div>
+                            <div style="text-align: center" class="col-4">
+                                <div class="form-group">
+                                    <label> Minium(Volts): </label>
+                                    <input id="miniumV" disabled class="form-control" type="number"/>
+                                </div>  
+                            </div>
+                            <div style="text-align: center" class="col-4">
+                                <div class="form-group">
+                                    <label> Maximum(Volts): </label>
+                                    <input id="maximumV" disabled class="form-control" type="number"/>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div style="text-align: center" class="col-4">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="typeDigital" value="option1">
+                                    <label class="form-check-label" for="inlineCheckbox1">Digital</label>
+                                </div> 
+                            </div>
+                            <div style="text-align: center" class="col-4">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="typeAnalog" value="option1">
+                                    <label class="form-check-label" for="inlineCheckbox1">Analog</label>
+                                </div>  
+                            </div>
+                            <div style="text-align: center" class="col-4">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="typeData" value="option1">
+                                    <label class="form-check-label" for="inlineCheckbox1">Data</label>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btnBorde" data-dismiss="modal">Cancel</button>
+                        <button id="btnSaveParameter" type="button" class="btn btn-primary btnBorde">Save Parameter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalDuvcaDetails" class="modalDuvcaBase animate__animated animate__fadeIn">
+            <div class="modalDetails animate__animated animate__zoomIn">
+                <div class="imgDetails" id="imgDetails">
+                    <img id="imgDetailPropio" alt="..." src="">
+                </div>
+                <div class="detailsDiv"> 
+                    <button id="closeModalDuvca" class="closeDuvca"> 
+                        <span class="oi oi-x"></span>
+                    </button>
+                    <div style="margin-top: 90px">
+                        <h3 id="nameProductDetails"> xxx-xxx </h3>
+                        <div class="form-group">
+                            <span class="badge badge-pill badge-success">Description</span>
+                        </div>
+                        <div class="form-group">
+                            <label id="descriptionProductDetails">
+                                xxx-xxx
+                            </label>
+                        </div>
+
+                        <div style="float: right; position: absolute; bottom: 0px" class="form-group">
+                            <label>
+                                <a href="#" class="badge badge-pill badge-info">
+                                    <span class="oi oi-person"></span>
+                                    <span id="userProduct"> xxx </span>
+                                </a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-header-home">
+            <div class="container">
+                <img class="logoDuvca-home" alt="..." src="resources/img/logoEC04.png"  width="170" height="50"/>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <h4 style="margin-top: -5px; margin-right: 5px"><a href="home.html" class="badge badge-pill badge-dark"> Home </a></h4>
+                    </li>
+                    <li class="nav-item">
+                        <h4 style="margin-top: -5px; margin-right: 5px"><a id="rolUser" href="#" class="badge badge-pill badge-success">rol</a></h4>
+                    </li>
+                    <li class="nav-item">
+                        <h4 style="margin-top: -5px"><a id="nameUser01" href="#" class="badge badge-pill badge-light"> xxx-xxx </a></h4>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <div class="dropdown">
+                                <button style="border-radius: 100px !important; height: 30px; width: 30px; margin-top: -20px" class="btn btn-primary dropdown" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img id="imgUser01" alt="..." onerror="this.src='resources/img/createAccount.png'" style="background: white; border-radius: 50%; margin-top: -10px; margin-left: -13px" src="resources/img/createAccount.png" width="30" height="30">
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                                    <!--<button class="dropdown-item">Settings</button>-->
+                                    <button id="btnLogOff" class="dropdown-item" onclick="logOff()"><span class="oi oi-share-boxed" style="margin-right: 10px;"></span> Log off</button>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px" class="container">
+            <div style="margin-bottom: 20px" class="row">
+                <button style="margin: auto" id="btnNewComponent" type="button" class="btn btn-primary btnBorde"> <span style="color: white" class="oi oi-plus"></span> New Component </button>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="resources/img/component.png" class="card-img" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Components</h5>
+                                    <div class="card-text"> 
+                                        <h2><a href="#" class="badge badge-pill badge-light"><span class="oi oi-cloud"></span> <span id="unirPrice"> {{total.length}} </span> </a></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="resources/img/component.png" class="card-img" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">My Components</h5>
+                                    <div class="card-text"> 
+                                        <h2><a href="#" class="badge badge-pill badge-light"><span class="oi oi-check"></span> <span id="unirPrice"> {{arrayComponentsActive.length}} </span> </a></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="formComponent" style="display: none" class="container">
+                <div class="form-group">
+                    <label class="col-form-label "> Component name: </label>
+                    <input id="componentName_new" class="form-control" type="text">
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label "> Description: </label>
+                    <textarea id="description_new" class="form-control"></textarea> 
+                </div>
+
+                <div class="form-group">
+                    <label class="col-form-label"> Code component: </label>
+                    <span style="float: right" class="badge badge-pill badge-info">Add one '\n' for each line break</span>
+                    <textarea id="codeComponent_new" class="form-control"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <span class="badge badge-pill badge-dark">Parameters</span>
+                </div>
+
+                <div style="margin-top: 10px" class="alert alert-info" role="alert">
+                    <span style="margin-right: 5px" ng-repeat="domArrayPorts in arrayPorts" class="badge badge-pill badge-light">
+                        <span> {{domArrayPorts.port}} </span>
+                        <a href="#" ng-click="deletePort($index)" class="badge badge-danger"><span class="oi oi-circle-x"></span></a>
+                    </span>
+                </div>
+
+                <div style="text-align: center" class="form-group">
+                    <img id="aux">
+                    <button id="sizeShowComponent" class="btn btn-info" style="margin-bottom: 10px"> Size Component </button>
+                    <label id="btnAddImgComponent" style="font-weight: bold; display: none" for="imgcargada" class="btn btn-light">
+                        <span style="color:black;"> Add your component image</span>
+                    </label> 
+                    <input style="display: none" type="file" id="imgcargada"><br>
+                    <button class="btn btn-outline-primary" id="rotarL"><span class="oi oi-action-undo"></span></button>
+                    <button class="btn btn-outline-primary" id="rotarR"><span class="oi oi-action-redo"></span></button>
+                    <button style="display: none" id="puntosx">prt</button>
+                </div>
+                <div style="text-align: center">
+                    <canvas style="border: 1px solid #000;position: absolute;" id="canvas_buffer" width="250" height="250"></canvas>
+                    <canvas style="border: 1px solid #000;position: relative;" id="canvas_buffer1" width="250" height="250"></canvas>
+                </div>
+                <div class="form-group">
+                    <button style="border-radius: 30px" class="btn btn-primary" id="saveComponent"> Save Component </button>
+                    <button style="border-radius: 30px" class="btn btn-danger" id="cancelComponent"> Cancel </button>
+                </div>
+            </div>
+
+            <!-- cuerpo -->
+            <div id="tableComponentDiv" style="display: block">
+                <div id="unconfirmedComponent">
+                    <span class="badge badge-pill badge-warning">Unconfirmed Components</span>
+                    <div ng-show="arrayComponentsInactive.length === 0" style="text-align: center"> 
+                        <img width="600" height="430" src="resources/img/notData.png"/>
+                    </div>
+                    <hr>
+                    <table class="table table-sm table-bordered table-striped" ng-show="arrayComponentsInactive.length > 0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="domComponentsInactive in arrayComponentsInactive">
+                                <th scope="row">{{domComponentsInactive.id_com}}</th>
+                                <td>{{domComponentsInactive.name_component}}</td>
+                                <td>{{domComponentsInactive.description_component}}</td>
+                                <td><a href="#" ng-click="viewDetails(domComponentsInactive)" class="badge badge-light">Details</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <span class="badge badge-pill badge-success">Confirmed Components</span>
+                <hr>
+                <div ng-show="arrayComponentsActive.length === 0" style="text-align: center"> 
+                    <img width="600" height="430" src="resources/img/notData.png"/>
+                </div>
+                <table class="table table-sm table-bordered table-striped" ng-show="arrayComponentsActive.length > 0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="domComponentsActive in arrayComponentsActive">
+                            <th scope="row">{{domComponentsActive.id_com}}</th>
+                            <td>{{domComponentsActive.name_component}}</td>
+                            <td>{{domComponentsActive.description_component}}</td>
+                            <td><a href="#" ng-click="viewDetails(domComponentsActive)" class="badge badge-light">Details</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="resources/js/jsComponents.js" type="text/javascript"></script>
+    </body>
+</html>

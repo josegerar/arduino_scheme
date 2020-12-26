@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html ng-app="app">
+    <head>
+        <title>Work Area</title>
+        <link rel="shortcut icon" href="resources/img/icono.ico">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="resources/css/cssLibrary/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/styleWorkArea.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/open-iconic-bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/animate.min.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/cssLibrary/toastr.min.css" rel="stylesheet" type="text/css"/>
+
+        <script src="resources/js/jsLibrary/jquery.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/angular.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/popper.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/bootstrap.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/sweetalert.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/gojs.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/polylineLinkingTool.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/loading.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/toastr.min.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/shortcut.js" type="text/javascript"></script>
+
+        <script src="resources/js/jsLibrary/store2.min.js" type="text/javascript"></script>
+        <script src="resources/js/0_global.js" type="text/javascript"></script>
+        <script src="resources/js/jsAlertPersonalize.js" type="text/javascript"></script>
+        <style>
+            #editorCode{
+                height:100%;
+                min-height:43.6vh;
+                width: 100%;
+                display: inline-block;
+            }
+            .paddingmin{padding: 2px 5px 2px 5px}
+            .minubesita{background-color:#c3e6cb;}
+            .nominubesita{background-color:ghostwhite;}
+        </style>
+
+    </head>
+    <body ng-controller="controllerWork">
+
+        <header class="menu-header">
+            <img class="logoDuvca" src="resources/img/logoSolo.png"  width="50" height="50"/>
+            <div style="margin-top: -50px" class="menu-header-circuitName">
+                <strong id="nameystem" class="tittle-circuit"> Circuit name </strong>
+                <span class="badge badge-light">.EAC</span>
+            </div>
+            <nav class="nav menuCenter">
+                <div class="dropdown">
+                    <a class="nav-link btn btn-outline-light itemMenu-duvca"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="menu1"> File </a>
+                    <div class="dropdown-menu" aria-labelledby="menu1">
+                        <a id="saveSystem" class="dropdown-item" href="#">Save <span class="badge badge-light">Crtl + S</span> </a>
+                        <a id="exportPNG" class="dropdown-item" href="#">Export PNG</a>
+                        <a id="openmodalProjectDescriptor" class="dropdown-item" onclick="openmodalProjectDescriptor()" href="#">About this proyect</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="home.html">Close System</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a class="nav-link btn btn-outline-light itemMenu-duvca" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="menu2"> Code </a>
+                    <div class="dropdown-menu" aria-labelledby="menu2">
+                        <a id="viewCode" class="dropdown-item" href="#">View Code <span class="badge badge-light">Crtl + P</span> </a>
+                        <a id="downloadCode" download="code.INO" class="dropdown-item" href="#">Download Code</a>
+                    </div>
+                </div>
+                <a class="nav-link btn btn-outline-light itemMenu-duvca"> Component </a> 
+            </nav>
+
+
+            <div class="dataUser">
+                <img id="imgUser01" alt="..." class="logoDuvca divPhotoUser" onerror="this.src='resources/img/customer.png'" src="resources/img/customer.png"  width="40" height="40"/>
+                <ul class="nav justify-content-end nameUser">
+                    <li class="nav-item">
+                        <a id="nameComponentKey" style="margin-right: 10px; margin-top: 3px" href="#" class="badge badge-success badge-pill">xxx</a>
+
+                    </li>
+                    <li class="nav-item">
+                        <button style="margin-right: 10px" type="button" class="btn btn-light itemMenu-share" ng-click="flagmultimodalx = 2" onclick="openmodalProjectDescriptor()" data-toggle="tooltip" data-placement="top" title="Join Users">
+                            <span class="oi oi-people"></span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light itemMenu-share" href="#"> <span class="oi oi-link-intact"></span> Share</a>
+                    </li>
+
+                </ul>
+            </div>
+        </header>
+        <div style="margin-right: 0px; height: 90vh" class="row">
+            <div style="padding: 0px; width: 20%" class="col-md-3 col-xl-2 bd-sidebar">
+                <div id="myPalette" style=" height: 70vh; border-right: 1px solid #DDE0E6">
+
+                </div>
+
+                <div id="overView" style=" height: 20vh; border-top: 1px solid #DDE0E6; border-right: 1px solid #DDE0E6; border-bottom: 1px solid #DDE0E6">
+
+                </div>
+
+            </div>
+            <main style="padding: 0px !important; width: 80%" class="col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+                <div style="height: 90vh; width: 100%; position: relative;border-bottom: 1px solid #DDE0E6;" id="lienzo"> 
+
+                </div>
+
+                <div id="moduleParam" class="animate__animated animate__fadeInUpBig divParameters"> 
+                    <div style="padding: 10px 10px 0px 10px">
+                        <a onclick="closeParameters()" data-toggle="tooltip" data-placement="top" title="Close" style="float: right; margin-top: 5px" href="#" class="badge badge-pill badge-light"><span class="oi oi-circle-x">  </span></a>
+                        <h5><span id="titleParameters" class="badge badge-primary">xxx - xxx</span></h5>
+                    </div>
+                    <hr>
+                    <div>
+                        <div id="editorCode" style="width: 50%; border-right: 1px solid #DDE0E6; height: 43.6vh; margin-top: 0px; overflow: auto; float: right; background: white">
+
+                        </div>
+
+
+                        <div style="padding: 20px; width: 50%; border-right: 1px solid #DDE0E6; height: 43.3vh; margin-top: -16px; overflow: auto;">
+                            <div class="form-group" ng-repeat="domArrayParameters in arrayParameters">
+
+                                <!-- formulario para ingresar los puertos que estan conectados y poder generar el codigo arduino -->
+
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-form-label col-form-label-sm"> Port </label>
+                                        <input readonly="" id="{{domArrayParameters.port}}" value="{{domArrayParameters.idComponent}} {{domArrayParameters.port}}" type="text" class="form-control form-control-sm">
+                                    </div>
+                                    <div style="display: none" id="data{{domArrayParameters.port}}" class="col">
+                                        <label class="col-form-label col-form-label-sm"> Value to consider: </label>
+                                        <input  id="input{{domArrayParameters.port}}"  type="text" class="form-control form-control-sm">
+                                    </div>
+                                    <div style="display: none" id="portDigital{{domArrayParameters.port}}" class="col">
+                                        <label class="col-form-label col-form-label-sm"> Digital </label>
+                                        <select id="selectPD{{domArrayParameters.port}}" class="form-control form-control-sm">
+                                            <option value="---">---</option>
+                                            <option value="digitalWrite"> Digital Write </option>
+                                            <option value="digitalRead"> Digital Read </option>
+                                        </select>
+                                    </div>
+                                    <div style="display: none" id="statDigital{{domArrayParameters.port}}" class="col">
+                                        <label class="col-form-label col-form-label-sm"> Stat </label>
+                                        <select id="selectSD{{domArrayParameters.port}}" class="form-control form-control-sm">
+                                            <option>---</option>
+                                            <option>HIGH</option>
+                                            <option>LOW</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: none" id="portAnalog{{domArrayParameters.port}}" class="col">
+                                        <label class="col-form-label col-form-label-sm"> Analog </label>
+                                        <select id="selectPA{{domArrayParameters.port}}" class="form-control form-control-sm">
+                                            <option value="---">---</option>
+                                            <option value="analogWrite"> Analog Write </option>
+                                            <option value="analogRead"> Analog Read </option>
+                                        </select>
+                                    </div>
+                                    <div style="display : none" id="btnDigitalAnalog{{domArrayParameters.port}}" class="col">
+                                        <label class="col-form-label col-form-label-sm"> Action </label> <br>
+                                        <a href="#" ng-click="addPortsDigitalAnalog($index)" class="badge badge-success">Add </a>
+                                    </div>
+                                    <div style="display : none" id="btnData{{domArrayParameters.port}}" class="col">
+                                        <label class="col-form-label col-form-label-sm"> Action </label> <br>
+                                        <a href="#" ng-click="addValueData($index)" class="badge badge-success">Add </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- lista de los puertos digitales o analogicos -->
+
+                            <div style="margin-top: 10px" class="alert alert-info" role="alert">
+                                <span ng-repeat="domValueDigitalAnalog in jsonCode[1].pinMode" style="margin-right: 5px" class="badge badge-pill badge-light">
+                                    <span> {{domValueDigitalAnalog.namePort}} {{domValueDigitalAnalog.valueWriteRaad}} {{domValueDigitalAnalog.pinModePort}} </span>
+                                    <a href="#" ng-click="deletePort($index)" class="badge badge-danger"><span class="oi oi-circle-x"></span></a>
+                                </span>
+                            </div>
+
+                            <!-- lista de los valores de los puertos de los componentes a considerar -->
+
+                            <div style="margin-top: 10px" class="alert alert-info" role="alert">
+                                <span ng-repeat="domjsonValueData in jsonCode[3].params" style="margin-right: 5px" class="badge badge-pill badge-light">
+                                    <span> #{{domjsonValueData.idComponent}}_{{domjsonValueData.namePort}} -> {{domjsonValueData.valueParam}} </span>
+                                    <a href="#" ng-click="deletePort($index)" class="badge badge-danger"><span class="oi oi-circle-x"></span></a>
+                                </span>
+                            </div>
+
+                            <div class="form-group">
+                                <span class="badge badge-pill badge-info">Programming</span>
+                            </div>
+                            <div class="accordion" id="accordionExample">
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                Variables
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label class="col-form-label col-form-label-sm"> Name: </label>
+                                                        <input id="nameVar" type="text" class="form-control form-control-sm">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="col-form-label col-form-label-sm"> Type: </label>
+                                                        <select id="typeVar" class="form-control form-control-sm"> 
+                                                            <option>long</option>
+                                                            <option>float</option>
+                                                            <option>bool</option>
+                                                            <option>byte</option>
+                                                            <option>unsigned int</option>
+                                                            <option>int</option>
+                                                            <option>char</option>
+                                                            <option>char pointer</option>
+                                                            <option>string (char array)</option>
+                                                            <option>string</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col"> 
+                                                        <label class="col-form-label col-form-label-sm"> Value-Seriales: </label>
+                                                        <select id="selectSerial" class="form-control form-control-sm">
+                                                            <option>---</option>
+                                                            <option value="Serial.read()"> Serial read </option>
+                                                            <option value="Serial.avalible()"> Serial avalible </option>
+                                                            <option value="Serial.write()"> Serial write </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col"> 
+                                                        <label class="col-form-label col-form-label-sm"> Value-ports </label>
+                                                        <select id="selectPorts" class="form-control form-control-sm">
+                                                            <option>---</option>
+                                                            <option ng-repeat="domjsonRead in jsonCode[1].pinMode" ng-show="domjsonRead.out_inp === false"
+                                                                    value="{{ domjsonRead.valueWriteRaad}}" > 
+                                                                {{domjsonRead.namePort}} 
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="col-form-label col-form-label-sm"> Value: </label>
+                                                        <input id="valueVar" class="form-control form-control-sm" type="text">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="col-form-label col-form-label-sm"> Action </label> <br>
+                                                        <a href="#" ng-click="setVariables()" class="badge badge-success">Add</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="margin-top: 10px" class="alert alert-info" role="alert">
+                                                <span ng-repeat="domVariables in jsonCode[0].variables" style="margin-right: 5px" class="badge badge-pill badge-light">
+                                                    <span> {{domVariables.var}} </span>
+                                                    <a href="#" ng-click="deletePort($index)" class="badge badge-danger"><span class="oi oi-circle-x"></span></a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingTwo">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                Logic   
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                        <div class="card-body">
+
+                                            <div class="form-group">
+                                                <span style="float: right" ng-click="addCondition()" class="badge badge-pill badge-success">Add</span>
+                                                <span class="badge badge-pill badge-success">if</span>
+                                            </div>
+
+                                            <!-- aqui empeiza el ngrepeat de todo los if -->
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label col-form-label-sm"> Variables: </label>
+                                                            <select id="selectVariables_a" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domVariables in jsonCode[0].variables"
+                                                                        value="{{ domVariables.var}}" > 
+                                                                    {{ domVariables.var}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-form-label col-form-label-sm"> Value Ports: </label>
+                                                            <select id="selectPorts_a" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domValueDigitalAnalog in jsonCode[1].pinMode"
+                                                                        value="{{ domValueDigitalAnalog.valueWriteRaad}}" > 
+                                                                    {{ domValueDigitalAnalog.valueWriteRaad}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-form-label col-form-label-sm"> Value Params: </label>
+                                                            <select id="selectParams_a" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domjsonValueData in jsonCode[3].params"
+                                                                        value="{{ domjsonValueData.valueParam}}" > 
+                                                                    #{{domjsonValueData.idComponent}}_{{ domjsonValueData.namePort}} -> {{ domjsonValueData.valueParam}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-2">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label col-form-label-sm"> Operation: </label>
+                                                            <select id="selectOperation" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option value="=="> > </option>
+                                                                <option value="<"> < </option>
+                                                                <option value=">="> >= </option>
+                                                                <option value="<="> <= </option>
+                                                                <option value="=="> == </option>
+                                                                <option value="&&"> && </option>
+                                                                <option value="||"> || </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-5">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label col-form-label-sm"> Variables: </label>
+                                                            <select id="selectVariables_b" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domVariables in jsonCode[0].variables"
+                                                                        value="{{ domVariables.var}}" > 
+                                                                    {{ domVariables.var}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-form-label col-form-label-sm"> Value Ports: </label>
+                                                            <select id="selectPorts_b" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domValueDigitalAnalog in jsonCode[1].pinMode"
+                                                                        value="{{ domValueDigitalAnalog.valueWriteRaad}}" > 
+                                                                    {{ domValueDigitalAnalog.valueWriteRaad}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-form-label col-form-label-sm"> Value Params: </label>
+                                                            <select id="selectParams_b" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domjsonValueData in jsonCode[3].params"
+                                                                        value="{{ domjsonValueData.valueParam}}" > 
+                                                                    #{{domjsonValueData.idComponent}}_{{ domjsonValueData.namePort}} -> {{ domjsonValueData.valueParam}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <!--a style="float: right; margin-right: 10px" href="#" ng-click="addElse($index)" class="badge badge-warning">Add do Else</a>
+                                                <a style="float: right; margin-right: 10px" href="#" ng-click="addIf()" class="badge badge-success">Add do If</a-->
+                                                <span class="badge badge-pill badge-success">do</span> 
+                                                or
+                                                <span class="badge badge-pill badge-warning">else</span>
+                                            </div>
+                                            <div class="form-group">
+                                                <!-- variables dentro de if -->
+                                                <span  class="badge badge-pill badge-light">Variables</span>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label class="col-form-label col-form-label-sm"> Name: </label>
+                                                        <input id="nameVarIf" type="text" class="form-control form-control-sm">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label class="col-form-label col-form-label-sm"> Type: </label>
+                                                        <select id="typeVarIf" class="form-control form-control-sm">
+                                                            <option>---</option>
+                                                            <option>long</option>
+                                                            <option>float</option>
+                                                            <option>bool</option>
+                                                            <option>byte</option>
+                                                            <option>unsigned int</option>
+                                                            <option>int</option>
+                                                            <option>char</option>
+                                                            <option>char pointer</option>
+                                                            <option>string (char array)</option>
+                                                            <option>string</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col"> 
+                                                        <label class="col-form-label col-form-label-sm"> Value-Seriales: </label>
+                                                        <select id="selectSerialIf" class="form-control form-control-sm">
+                                                            <option>---</option>
+                                                            <option value="Serial.read()"> Serial read </option>
+                                                            <option value="Serial.avalible()"> Serial avalible </option>
+                                                            <option value="Serial.write()"> Serial write </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col"> 
+                                                            <label class="col-form-label col-form-label-sm"> Value-ports </label>
+                                                            <select id="selectPortsiF" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domjsonRead in jsonCode[1].pinMode" ng-show="domjsonRead.out_inp === false"
+                                                                        value="{{ domjsonRead.valueWriteRaad}}" > 
+                                                                    {{domjsonRead.namePort}} 
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="col-form-label col-form-label-sm"> Value: </label>
+                                                            <input id="valueVarIf" class="form-control form-control-sm" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- aqui va el apartado de seriales -->
+                                                <span  class="badge badge-pill badge-light">Print</span>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label class="col-form-label col-form-label-sm"> Value-Seriales: </label>
+                                                            <select id="selectSerialIfPrint" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option value="Serial.format"> Print format </option>
+                                                                <option value="Serial.println"> Print on new line </option>
+                                                                <option value="Serial.print"> Print on same line </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="col-form-label col-form-label-sm"> Format: </label>
+                                                            <select id="selectFomatIf" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option value="DEC"> Decimal </option>
+                                                                <option value="HEX"> Hexadecimal </option>
+                                                                <option value="BIN"> Binary </option>
+                                                                <option value="OCT"> Octal </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="col-form-label col-form-label-sm"> Variables: </label>
+                                                            <select id="selectVariablesIf" class="form-control form-control-sm">
+                                                                <option>---</option>
+                                                                <option ng-repeat="domVariables in jsonCode[0].variables"
+                                                                        value="{{ domVariables.var}}" > 
+                                                                    {{ domVariables.var}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-form-label col-form-label-sm"> Value: </label>
+                                                    <input id="valueSerialIf" type="text" class="form-control form-control-sm">
+                                                </div>
+                                            </div>
+
+                                            <hr>
+
+                                            <!-- aqui termina el ngrepeat de todo los if -->
+
+                                            <ul>
+                                                <li style="list-style:none;" ng-repeat="domCode in jsonCode[2].logic">
+                                                    <span ng-if="domCode.doif && domCode.if.length > 0" class="badge badge-pill badge-success"> 
+                                                        if {{domCode.if}}
+                                                        <a href="#" ng-click="updateIf($index)" class="badge badge-light"><span class="oi oi-pencil" data-toggle="tooltip" data-placement="top" title="updateIf(...)"></span></a>
+                                                        <a href="#" ng-click="addDoIf($index)" class="badge badge-light"><span class="oi oi-code" data-toggle="tooltip" data-placement="top" title="do(...)"></span></a>
+                                                        <a href="#" ng-click="addElse($index)" class="badge badge-light"><span class="oi oi-script" data-toggle="tooltip" data-placement="top" title="else{...}"></span></a>
+                                                        <a href="#" ng-click="addNewIf($index)" class="badge badge-light"><span class="oi oi-info" data-toggle="tooltip" data-placement="top" title="New if(...)"></span></a>
+                                                    </span>
+                                                    <ul>
+                                                        <li style="list-style:none;">
+                                                            <span ng-if="domCode.doif[0].do.length > 0" class="badge badge-pill badge-light">
+                                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.doif.length) + 'do ' + domCode.doif[0].do}} <br> 
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                    <div ng-if="domCode.doif && domCode.doif.length > 0" ng-include="'logic.html'">
+                                                    </div>
+                                                    <ul>
+                                                        <li style="list-style:none;">
+                                                            <span ng-if="domCode.doif && domCode.else.length > 0" class="badge badge-pill badge-warning"> 
+                                                                else
+                                                                <a href="#" ng-click="elseAddNewIf($index)" class="badge badge-light"><span class="oi oi-info" data-toggle="tooltip" data-placement="top" title="New if(...)"></span></a>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                    <ul>
+                                                        <li style="list-style:none;">
+                                                            <span ng-if="domCode.doif && domCode.else.length > 0" class="badge badge-pill badge-light">
+                                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.else.length) + 'do ' + domCode.else[0].do}} <br> 
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                    <div ng-if="domCode.else && domCode.else.length > 0" ng-include="'logic2.html'">
+                                                </li>
+                                            </ul>
+
+
+                                            <script type="text/ng-template" id="logic.html">
+                                                <ul>
+                                                <li style="list-style:none;" ng-repeat="domCode in domCode.doif" >
+                                                <span ng-if="domCode.doif && domCode.if.length > 0" class="badge badge-pill badge-success"> 
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.doif.length) + 'if ' +domCode.if}}
+                                                <a href="#" ng-click="updateIf_A(domCode)" class="badge badge-ligth" data-toggle="tooltip" data-placement="top" title="updateIf(...)"><span class="oi oi-pencil"></span></a>
+                                                <a href="#" ng-click="addDoIf_A(domCode)" class="badge badge-ligth"><span class="oi oi-code" data-toggle="tooltip" data-placement="top" title="do(...)"></span></a>
+                                                <a href="#" ng-click="addElse_A(domCode)" class="badge badge-ligth"><span class="oi oi-script" data-toggle="tooltip" data-placement="top" title="else{...}"></span></a>
+                                                <a href="#" ng-click="addNewIf_A(domCode)" class="badge badge-ligth"><span class="oi oi-info" data-toggle="tooltip" data-placement="top" title="New if(...)"></span></a>
+                                                </span>
+                                                <ul>
+                                                <li style="list-style:none;">
+                                                <span ng-if="domCode.doif && domCode.doif[0].do.length > 0" class="badge badge-pill badge-light">
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.doif.length+1) + 'do ' +domCode.doif[0].do}} <br>
+                                                </li>
+                                                </span>
+                                                </ul>
+                                                <div ng-if="domCode.doif && domCode.doif.length > 0" ng-include="'logic.html'"></div>
+                                                <ul>
+                                                <li ng-if="domCode.else && domCode.else.length > 0" style="list-style:none;">
+                                                <span class="badge badge-pill badge-warning"> 
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.doif.length) + 'else'}}
+                                                <a href="#" ng-click="elseAddNewIf_A(domCode)" class="badge badge-light"><span class="oi oi-info" data-toggle="tooltip" data-placement="top" title="New if(...)"></span></a>
+                                                </span>
+                                                </li>
+                                                </ul>
+                                                <ul>
+                                                <li style="list-style:none;">
+                                                <span ng-if="domCode.else && domCode.else.length > 0" class="badge badge-pill badge-light">
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.else.length+1) + 'do ' +domCode.else[0].do}} <br>
+                                                </span>
+                                                </li>
+                                                </ul>
+                                                <div ng-if="domCode.else.length > 0" ng-include="'logic2.html'">
+                                                </li>
+                                                </ul>
+                                            </script>
+
+                                            <script type="text/ng-template" id="logic2.html">
+                                                <ul>
+                                                <li style="list-style:none;" ng-repeat="domCode in domCode.else" >
+                                                <span ng-if=" domCode.if.length > 0" class="badge badge-pill badge-success"> 
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.else.length) + 'if ' +domCode.if}}
+                                                <a href="#" ng-click="updateIf_A(domCode)" class="badge badge-ligth" data-toggle="tooltip" data-placement="top" title="updateIf(...)"><span class="oi oi-pencil"></span></a>
+                                                <a href="#" ng-click="addDoIf_A(domCode)" class="badge badge-ligth"><span class="oi oi-code" data-toggle="tooltip" data-placement="top" title="do(...)"></span></a>
+                                                <a href="#" ng-click="addElse_A(domCode)" class="badge badge-ligth"><span class="oi oi-script" data-toggle="tooltip" data-placement="top" title="else{...}"></span></a>
+                                                <a href="#" ng-click="addNewIf_A(domCode)" class="badge badge-ligth"><span class="oi oi-info" data-toggle="tooltip" data-placement="top" title="New if(...)"></span></a>
+                                                </span>
+                                                <ul>
+                                                <li style="list-style:none;">
+                                                <span ng-if=" domCode.doif.length > 0" class="badge badge-pill badge-light">
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.doif.length+1) + 'do ' +domCode.doif[0].do}} <br>
+                                                </li>
+                                                </span>
+                                                </ul>
+                                                <div ng-if="domCode.doif.length > 0" ng-include="'logic.html'"></div>
+                                                <ul>
+                                                <li ng-if="domCode.else.length > 0" style="list-style:none;">
+                                                <span class="badge badge-pill badge-warning"> 
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.else.length) + 'else'}}
+                                                <a href="#" ng-click="elseAddNewIf_A(domCode)" class="badge badge-light"><span class="oi oi-info" data-toggle="tooltip" data-placement="top" title="New if(...)"></span></a>
+                                                </span>
+                                                </li>
+                                                </ul>
+                                                <ul>
+                                                <li style="list-style:none;">
+                                                <span ng-if="domCode.else && domCode.else.length > 0" class="badge badge-pill badge-light">
+                                                {{'&nbsp&nbsp&nbsp&nbsp'.repeat(domCode.else.length+1) + 'do ' +domCode.else[0].do}} <br>
+                                                </span>
+                                                </li>
+                                                </ul>
+                                                <div ng-if="domCode.else && domCode.else.length > 0" ng-include="'logic2.html'">
+                                                </li>
+                                                </ul>
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                Collapsible Group Item #3
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input style="border-radius: 30px; float: right; margin-bottom: 10px" type="button" value="Save Changes" class="btn btn-success"/> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="moduleCode" class="animate__animated animate__fadeInRightBig" style="background: white; height: 90vh; width: 50%; float: right; margin-top: -90vh; z-index: 10; position: inherit; border-left: 1px solid #DDE0E6;border-bottom: 1px solid #DDE0E6; display: none">
+                    <div style="padding: 10px 10px 0px 10px">
+                        <a id="closeCode" data-toggle="tooltip" data-placement="top" title="Close" style="float: right; margin-top: 5px" href="#" class="badge badge-pill badge-light"><span class="oi oi-circle-x">  </span></a>
+                        <a style="float: right; margin-top: 5px; margin-right: 10px" href="#" id="btnDownload" download="code.INO" class="badge badge-pill badge-success"> <span class="oi oi-data-transfer-download"></span> Download</a>
+                        <h5><span class="badge badge-primary">Code</span></h5>
+                    </div> 
+                    <hr style="margin-bottom: 0px">
+                    <div style="
+                         min-height:83.2vh;
+                         width: 100%;
+                         display: inline-block;" id="editorCodeDownload">
+
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <!--modal-->
+        <div class="modal fade" id="modalProjectDescriptor" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">About the Project.</h5>
+                        <button type="button" class="close" data-dismiss="modal"><img src="resources/img/close.png" width="15" height="15" alt="X "/></button>
+                    </div>
+                    <div class="modal-body">
+                        <a class="btn btn-light" ng-click="flagmultimodalx = 0;">Information</a>
+                        <a class="btn btn-light" ng-click="flagmultimodalx = 1;">Persons</a>
+                        <a class="btn btn-light" ng-click="flagmultimodalx = 2;">On Line</a>
+                        <a class="btn btn-light" ng-click="flagmultimodalx = 3;">Tempy Chat</a>
+                        <div class="dropdown-divider"></div>
+                        <div ng-show="flagmultimodalx === 0">
+                            <div class="form-group">  
+                                <label> Job Name: </label>
+                                <span class="form-control" id="job_name">{{ProyectoGlobalSuper.job.name_job}}</span>
+                            </div>
+                            <div class="form-group">  
+                                <label> Description: </label>
+                                <textarea class="form-control" id="job_commit" readonly="readonly" style="resize:none;">{{ProyectoGlobalSuper.job.commit_job}}</textarea>
+                            </div>
+                            <div class="form-group">  
+                                <label> Creation Date: </label>
+                                <span class="form-control" id="job_creation">{{ProyectoGlobalSuper.job.creationdate_job}}</span>
+                            </div>
+                            <div class="form-group">  
+                                <label> Last Modification: </label>
+                                <span class="form-control" id="job_modification">{{ProyectoGlobalSuper.job.lastmodification_job}}</span>
+                            </div>
+                        </div>
+                        <div ng-show="flagmultimodalx === 1" >
+                            <div ng-repeat="people in ProyectoGlobalSuper.persons">
+
+                                <div class="media">
+                                    <img src="..." style="border-radius: 50%;" onerror="this.src='resources/img/customer.png'" ng-src="{{people.img_user|| 'resources/img/customer.png'}}" class="align-self-start mr-3" width="40" height="40" alt="...">
+                                    <div class="media-body">
+                                        <strong> User name: </strong>
+                                        <span> {{people.name_user.toString().trim() + ' ' + people.lastname_user.toString().trim()}} </span> <br>
+                                        <strong> Email: </strong>
+                                        <span>{{people.email_user}}</span><br>
+                                        <strong> Join date: </strong>
+                                        <span>{{people.joindate_permitmaster}}</span><br>
+                                        <strong> Permit: </strong>
+                                        <span>{{people.description_permitmaster}}</span><br>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div ng-show="flagmultimodalx === 2">
+
+                            <div ng-repeat="person in ListOnline">
+                                <table border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <img alt="..." style="border-radius: 50%;"  onerror="this.src='resources/img/customer.png'" ng-src="{{person.image|| 'resources/img/customer.png'}}"  width="40" height="40"/>
+                                            </td>
+                                            <td>
+                                                <span>{{person.email.toString().trim()}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div ng-show="flagmultimodalx === 3">
+                            <div style="padding:10px 15px 10px 15px ; background-color: #b3d7ff; border-radius:5px;">The messages present here are not saved anywhere.</div>
+                            <div style="height: 50vh;overflow: auto;">
+                                <div class="{{'paddingmin ' + (itemmsg.clase || 'nominubesita')}}" style="border-radius:5px;margin: 5px 5px 5px 5px;font-size:12px;" ng-repeat="itemmsg in allmessages">
+                                    <table border="0" class="col align-self-center">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <img alt="..." style="border-radius: 50%;"  onerror="this.src='resources/img/customer.png'" ng-src="{{itemmsg.image|| 'resources/img/customer.png'}}"  width="20" height="20"/>
+                                                </td>
+                                                <td>
+                                                    <span class="paddingmin">{{itemmsg.names}}</span>
+                                                </td>
+                                                <td align="right">
+                                                    <span class="paddingmin" style="border-radius:5px;background-color: lightskyblue;">{{itemmsg.date}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <span class="paddingmin" >
+                                                        {{itemmsg.message}}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-10" style="text-align: center">
+                                    <input id="idmessagetext" type="text" class="form-control">
+                                </div>
+                                <div class="col-2" style="text-align: center">
+                                    <button class="btn btn-light" ng-click="enviarMsg()">
+                                        <img src="resources/img/paper-plane.png" alt=""/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="resources/js/workArea/jsDrawDiagram.js" type="text/javascript"></script>
+        <script src="resources/js/workArea/jsCanvasData.js" type="text/javascript"></script>
+        <script src="resources/js/workArea/jsPorts.js" type="text/javascript"></script>
+        <script src="resources/js/workArea/jsGeneralWorkArea.js" type="text/javascript"></script>
+        <script src="resources/js/workArea/jsGeneralWorkArea.js" type="text/javascript"></script>
+        <script src="resources/js/workArea/jsSocketWorkArea.js" type="text/javascript"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.1/ace.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/ace/mode-c_cpp.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/ace/ext-modelist.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/ace/ext-language_tools.js" type="text/javascript"></script>
+        <script src="resources/js/jsLibrary/ace/jsGenerateCode.js" type="text/javascript"></script>
+    </body>
+</html>
