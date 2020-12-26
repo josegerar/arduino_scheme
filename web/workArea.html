@@ -669,7 +669,7 @@ and open the template in the editor.
                             <div ng-repeat="people in ProyectoGlobalSuper.persons">
 
                                 <div class="media">
-                                    <img src="..." style="border-radius: 50%;" onerror="this.src='resources/img/customer.png'" ng-src="{{people.img_user|| 'resources/img/customer.png'}}" class="align-self-start mr-3" width="40" height="40" alt="...">
+                                    <img style="border-radius: 50%;" onerror="this.src='resources/img/customer.png'" ng-src="{{people.img_user|| 'resources/img/customer.png'}}" class="align-self-start mr-3" width="40" height="40" alt="...">
                                     <div class="media-body">
                                         <strong> User name: </strong>
                                         <span> {{people.name_user.toString().trim() + ' ' + people.lastname_user.toString().trim()}} </span> <br>

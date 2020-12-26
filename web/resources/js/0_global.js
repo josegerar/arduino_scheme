@@ -71,7 +71,7 @@ function getDataSession() {
                                 document.getElementById("btnNewItems").style.display = "none";
                             }
                             document.getElementById("nameUser02").innerHTML = nameformat;
-                            document.getElementById("imgUser02").src = dataUser.img_user;
+                            //document.getElementById("imgUser02").src = dataUser.img_user;
 
                             document.getElementById("names_usermodify").value = dataUser.names_user;
                             document.getElementById("lastnames_usermodify").value = dataUser.lastname_user;
@@ -84,7 +84,7 @@ function getDataSession() {
                             document.getElementById("nameUser01").innerHTML = dataUser.names_user + " " + dataUser.lastname_user;
                             document.getElementById("rolUser").innerHTML = dataUser.type_user;
                         }
-                        document.getElementById("imgUser01").src = dataUser.img_user;
+                        //document.getElementById("imgUser01").src = dataUser.img_user;
                     } else {
                         allMessageXD({status: 4, information: "The session was destroyed :c."});
                     }
@@ -100,6 +100,7 @@ function getDataSession() {
                 console.log(jqXHR);
                 console.log(textStatus);
                 console.log(errorThrown);
+                swal.close();
                 location.href = "login.html";
             }
         });

@@ -86,7 +86,7 @@ function initDiagram(json) {
                                         objpos.push({
                                             id: obj.part.data.key,
                                             position: obj.part.position
-                                        })
+                                        });
                                     } else {
                                         for (var i = 0; i < objpos.length; i++) {
                                             if (obj.part.data.key === objpos[i].id) {
@@ -376,6 +376,7 @@ function initPalette() {
 //Cargar los datos de los componentes(funcion que debe servir para el webSocket)
 function loadComponents(obj) {
     console.log(myDiagram.model);
+    console.log(obj);
     let components = [];
     let dataPorts = {
         size: "",
@@ -887,11 +888,11 @@ function getModelGraph() {
 }
 
 
-app = angular.module('app', []);
-app.factory('controllerWork', function ($rootScope) {
-
-
-});
+//app = angular.module('app', []);
+//app.factory('controllerWork', function ($rootScope) {
+//
+//
+//});
 
 
 

@@ -1,4 +1,4 @@
-/* global GlobalApisLocation, swal, store */
+/* global GlobalApisLocation, swal, store, shortcut */
 app = angular.module('app', []);
 app.controller('controllerWork', function ($scope, $http) {
     $scope.arrayComponentes = [];
@@ -60,6 +60,7 @@ app.controller('controllerWork', function ($scope, $http) {
                     loadComponents(responseA);
                 },
                 error: function (objXMLHttpRequest) {
+                    swal.close();
                     console.log("error: ", objXMLHttpRequest);
                 }
             });
@@ -144,6 +145,7 @@ app.controller('controllerWork', function ($scope, $http) {
     };
 
     $scope.setListOnline = function (obj) {
+        console.log("List; ", obj);
         $scope.$apply(function () {
             $scope.ListOnline = obj;
         });
@@ -289,12 +291,12 @@ app.controller('controllerWork', function ($scope, $http) {
     $(document).ready(function () {
 
     });
-    loadProject();
+
     function loadProject() {
         if (location.search.length > 0)
         {
             let sarch = location.search.toString().replace(/\?/, "");
-            console.log(sarch);
+            console.log("search: ", sarch);
 //            window.history.replaceState(null, null, "/ArudinoScheme_PI/workArea.html");
             let parts = sarch.split("&");
             console.log(parts);
@@ -312,7 +314,7 @@ app.controller('controllerWork', function ($scope, $http) {
             }
         }
     }
-
+    
     //funcion para guardar el sistema IOT (graficos) // proximamente a guardar el json que tiene la estructura del codigo
     function saveSystem() {
         //getModelSystem();
@@ -351,10 +353,11 @@ app.controller('controllerWork', function ($scope, $http) {
                     if (nameProject.includes("*")) {
                         document.getElementById("nameystem").innerHTML = $scope.ProyectoGlobalSuper.job.name_job;
                     }
-                    alertAll(data)
+                    alertAll(data);
                 },
                 error: function (objXMLHttpRequest) {
                     console.log("error: ", objXMLHttpRequest);
+                    swal.close();
                 }
             });
         } else
@@ -394,6 +397,7 @@ app.controller('controllerWork', function ($scope, $http) {
 
     //funcion para cargar el json del modelo del diagama (cargar grafico)
     function loadSystem(objectx) {
+
         var dataUser = store.session.get("usereacircuits");
         if (dataUser !== undefined && dataUser !== null)
         {
@@ -410,7 +414,7 @@ app.controller('controllerWork', function ($scope, $http) {
                     loading();
                 },
                 success: function (data) {
-                    swal.close();
+                    
 //                console.log(data);
                     responseA = data;
                     $scope.ProyectoGlobalSuper = data.data;
@@ -428,8 +432,11 @@ app.controller('controllerWork', function ($scope, $http) {
                     );
                     $("#nameystem").html(responseA.data.job.name_job);
                     getListComponents();
+
                     initDiagram(responseA.data);
+
                     initPalette();
+
                     initContextMenu();
                     if (responseA.data.system[0].modelCode.length > 0) {
                         $scope.jsonCode = JSON.parse(responseA.data.system[0].modelCode);
@@ -438,10 +445,13 @@ app.controller('controllerWork', function ($scope, $http) {
                     } else {
                         initCodeEditor();
                     }
+                    swal.close();
+                    console.log("pp");
                     flagSock = true;
                 },
                 error: function (objXMLHttpRequest) {
                     console.log("error: ", objXMLHttpRequest);
+                    swal.close();
                 }
             });
         } else
@@ -521,33 +531,44 @@ void loop()\n\
         code += "//Create by EaCircuits \n";
         //actualizamos los cambios realizados en el json de las variables
         //$scope.jsonCode[1].pinMode = $scope.jsonValueDigitalAnalog;
-
-        for (var indexVariables = 0; indexVariables < $scope.jsonCode[0].variables.length; indexVariables++) {
-            code += $scope.jsonCode[0].variables[indexVariables].type + " " + $scope.jsonCode[0].variables[indexVariables].var + ";\n";
+        console.log("scope: ", $scope);
+        if ($scope.jsonCode.length > 0) {
+            for (var indexVariables = 0; indexVariables < $scope.jsonCode[0].variables.length; indexVariables++) {
+                code += $scope.jsonCode[0].variables[indexVariables].type + " " + $scope.jsonCode[0].variables[indexVariables].var + ";\n";
+            }
         }
         code += "\n";
         code += "void setup () \n";
         code += "{ \n";
         code += "    Serial.begin(9600); \n";
 
-        for (var indexVariables = 0; indexVariables < $scope.jsonCode[1].pinMode.length; indexVariables++) {
-            code += "    " + $scope.jsonCode[1].pinMode[indexVariables].pinModePort + "\n";
-        }
-
-        for (var indexVariables = 0; indexVariables < $scope.jsonCode[0].variables.length; indexVariables++) {
-            code += "    " + $scope.jsonCode[0].variables[indexVariables].var + " = " + $scope.jsonCode[0].variables[indexVariables].value + ";\n";
-        }
-        code += "}\n";
-        code += "void loop() \n\
-{\n";
-
-        for (var indexVariables = 0; indexVariables < $scope.jsonCode[1].pinMode.length; indexVariables++) {
-            if ($scope.jsonCode[1].pinMode[indexVariables].out_inp === true) {
-                code += "    " + $scope.jsonCode[1].pinMode[indexVariables].valueWriteRaad + "\n";
+        if ($scope.jsonCode.length > 1) {
+            for (var indexVariables = 0; indexVariables < $scope.jsonCode[1].pinMode.length; indexVariables++) {
+                code += "    " + $scope.jsonCode[1].pinMode[indexVariables].pinModePort + "\n";
             }
         }
 
-        code += analize($scope.jsonCode[2].logic, 1);
+        if ($scope.jsonCode.length > 1) {
+            for (var indexVariables = 0; indexVariables < $scope.jsonCode[0].variables.length; indexVariables++) {
+                code += "    " + $scope.jsonCode[0].variables[indexVariables].var + " = " + $scope.jsonCode[0].variables[indexVariables].value + ";\n";
+            }
+        }
+
+        code += "}\n";
+        code += "void loop() \n\
+            {\n";
+
+        if ($scope.jsonCode.length > 1) {
+            for (var indexVariables = 0; indexVariables < $scope.jsonCode[1].pinMode.length; indexVariables++) {
+                if ($scope.jsonCode[1].pinMode[indexVariables].out_inp === true) {
+                    code += "    " + $scope.jsonCode[1].pinMode[indexVariables].valueWriteRaad + "\n";
+                }
+            }
+        }
+
+        if ($scope.jsonCode.length > 2) {
+            code += analize($scope.jsonCode[2].logic, 1);
+        }
 
         code += "}";
         editor.setValue(code);
@@ -1113,7 +1134,7 @@ void loop()\n\
         this.href = 'data:text/plain;charset=utf-8,'
                 + encodeURIComponent(editorD.getValue());
     });
+    
+    loadProject();
 
 });
-
-

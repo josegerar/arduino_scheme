@@ -54,6 +54,7 @@ function onMessage(evt) {
         angular.element($('[ng-controller="controllerWork"]')).scope().setListchat(JSON.parse(obj.content));
     } else if (obj.config === "list")
     {
+        console.log("s");
         angular.element($('[ng-controller="controllerWork"]')).scope().setListOnline(JSON.parse(obj.content));
     } else if (obj.config === "join")
     {
