@@ -1,4 +1,4 @@
-/* global GlobalApisLocation, swal */
+/* global GlobalApisLocation, swal, store, ace, axios, angular */
 
 app = angular.module('app', []);
 app.controller('controllerHome', function ($scope, $http) {
@@ -19,13 +19,26 @@ app.controller('controllerHome', function ($scope, $http) {
     /*agregamos los email a un json para visualizarlos en el DOM*/
     function addEmail(obj) {
         $scope.$apply(function () {
-            $scope.tableEmailShareProjects.push({
-                email: obj.email,
-                permit: obj.permit
-            });
+            var exist = false;
+            for (var i = 0; i < $scope.tableEmailShareProjects.length; i++) {
+                var data = $scope.tableEmailShareProjects[i];
+                if (data.email === obj.email) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (exist === false) {
+                $scope.tableEmailShareProjects.push({
+                    email: obj.email,
+                    permit: obj.permit
+                });
+            } else {
+                alertAll({information: "Email alredy exist", status: 3});
+            }
         });
 
     }
+
     /*agregar email para compartir el proyecto con otro usuarios registrados*/
     $("#addEmailShareProject").click(function () {
         var regexEmail = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
@@ -69,9 +82,20 @@ app.controller('controllerHome', function ($scope, $http) {
             codeProject: $scope.dataProjects[position].code_project,
             nameProject: $scope.dataProjects[position].name_project,
             dateCreationProject: $scope.dataProjects[position].creationdate_project,
-            idProject: $scope.dataProjects[position].projects_id_pr
+            idProject: $scope.dataProjects[position].projects_id_pr,
+            shareUsers: $scope.dataProjects[position].share_users
         };
-        console.log(dataForTheSharedProject);
+        var share_users = $scope.dataProjects[position].share_users;
+        $scope.tableEmailShareProjects = [];
+        share_users.forEach((item, index) => {
+            console.log(item);
+            $scope.tableEmailShareProjects.push({
+                email: item.email,
+                permit: item.permit
+            });
+        });
+
+        console.log(share_users);
     };
 
     /*function que enviara los datos a la BD y proximamente enviara los correos a todos los seleccionados*/
@@ -91,6 +115,7 @@ app.controller('controllerHome', function ($scope, $http) {
                 idProject: obj.idProject,
                 emails: jsonEmails
             };
+            console.log(objectProj);
             $.ajax({
                 method: "POST",
                 dataType: "json",
@@ -222,7 +247,7 @@ app.controller('controllerHome', function ($scope, $http) {
                             $scope.dataProjects = responseJson.data;
 //                            console.log($scope.dataProjects);
                             alertAll(responseJson);
-
+                            console.log($scope.dataProjects);
                             /*funcion para cargar el tooltip bonito*/
                             $(function () {
                                 $('[data-toggle="tooltip"]').tooltip();
@@ -692,6 +717,16 @@ app.controller('controllerHome', function ($scope, $http) {
                 dateCreationProject: $scope.dataShareProjectsConfirm[position].creationdate_project,
                 idProject: $scope.dataShareProjectsConfirm[position].projects_id_pr
             };
+            var share_users = $scope.dataProjects[position].share_users;
+            $scope.tableEmailShareProjects = [];
+            share_users.forEach((item, index) => {
+                console.log(item);
+                $scope.tableEmailShareProjects.push({
+                    email: item.email,
+                    permit: item.permit
+                });
+            });
+
         } else {
             allMessageXD({"information": "You do not have the necessary permissions to share the project with other users.", status: 3});
         }
