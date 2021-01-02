@@ -300,7 +300,17 @@ app.controller('controllerHome', function ($scope, $http) {
 
                         });
                     } else {
-                        alertAll(responseJson);
+                        $scope.$apply(function () {
+                            $scope.dataShareProjects = [];
+//                            console.log($scope.dataShareProjects),
+//                                    successTo(responseJson);
+                            alertAll(responseJson);
+                            /*funcion para cargar el tooltip bonito*/
+                            $(function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                            });
+
+                        });
                     }
                 }
                 ,
@@ -496,16 +506,11 @@ app.controller('controllerHome', function ($scope, $http) {
 //                    console.log(data);
                     var responseJson = data;
                     responseJson.tittle = "Share Project";
-//                    console.log(responseJson);
-                    if (responseJson.status === 2) {
-                        $("#modalConfirmShareProject").modal("hide");
-                        $("#codeShareProject").val("");
-                        alertAll(responseJson);
-                        loadSahreProjects();
-                        loadSahreProjectsConfirm();
-                    } else {
-                        alertAll(responseJson);
-                    }
+                    alertAll(responseJson);
+                    loadSahreProjects();
+                    loadSahreProjectsConfirm();
+                    $("#modalConfirmShareProject").modal("hide");
+                    $("#codeShareProject").val("");
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR);
