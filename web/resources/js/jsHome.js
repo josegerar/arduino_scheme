@@ -130,14 +130,11 @@ app.controller('controllerHome', function ($scope, $http) {
 //                    console.log(data);
                     var responseJson = data;
                     responseJson.tittle = "ShareProject";
-//                    console.log(responseJson);
-                    if (responseJson.status === 2) {
-                        alertAll(responseJson);
-                        loadProjects();
-                        $("#modalSharePorject").modal("hide");
-                    } else {
-                        alertAll(responseJson);
-                    }
+                    loadProjects();
+                    loadSahreProjects();
+                    loadSahreProjectsConfirm();
+                    alertAll(responseJson);
+                    $("#modalSharePorject").modal("hide");
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR);

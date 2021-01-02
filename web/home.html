@@ -265,9 +265,15 @@ and open the template in the editor.
                                 <tbody>
                                     <tr ng-repeat="viewEmailShareProject in tableEmailShareProjects">
                                         <td>{{viewEmailShareProject.email}}</td>
-                                        <td>{{viewEmailShareProject.permit}}</td>
+                                        <td>
+                                            <select class="form-control" name="selectpermit" id="selectpermit" ng-model="viewEmailShareProject.permit">
+                                                <option value="ADMIN">ADMIN</option>
+                                                <option value="READ">READ</option>
+                                                <option value="WRITE">WRITE</option>
+                                            </select>
+                                        </td>
                                         <td style="text-align: center">
-                                            <a href="#" class="badge badge-danger" data-toggle="tooltip" data-placement="top" title="Remove"><span class="oi oi-circle-x"></span></a>
+                                            <a href="#" class="badge badge-danger btn " data-toggle="tooltip" data-placement="top" title="Remove"><span class="oi oi-circle-x"></span></a>
                                         </td>
                                     </tr>
                                 </tbody>
