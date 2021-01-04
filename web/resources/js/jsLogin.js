@@ -357,7 +357,35 @@ function registorFromAPI(objectUsr)
     });
 }
 
-
+$("#btnResendCode").click(function () {
+    //console.log($("#formLogin").serialize());
+    console.log("Hola");
+    resendCode({
+           usr: $("#emailLog").val()
+    });
+});
+function resendCode(object)
+{
+    
+    return $.ajax({
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        url: GlobalApisLocation + "userApis/resendCodeVerify",
+        data: JSON.stringify({"email": object.usr }),
+        beforeSend: function () {
+            loading();
+        },
+        success: function (data) {
+            swal.close();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+        }
+    });
+}
 document.getElementById("api_img").crossOrigin = "Anonymous";
 document.getElementById("api_img").onload = function () {
     console.log(this.src);
