@@ -359,7 +359,7 @@ function registorFromAPI(objectUsr)
 
 $("#btnResendCode").click(function () {
     //console.log($("#formLogin").serialize());
-    console.log("Hola");
+    //console.log("Hola");
     resendCode({
            usr: $("#emailLog").val()
     });
