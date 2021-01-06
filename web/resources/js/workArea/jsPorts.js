@@ -125,9 +125,11 @@ function createPortsArduinoUno() {
             size: new go.Size(20, 20),
             position: new go.Point(i === 0 ? posX = 258 : i === 10 ? posX = 600 : i < 10 ? (posX += 32) : (posX += 32), -635),
             //background: "green",
+            //toSpot: go.Spot.Center,
+        //fromSpot: go.Spot.Center,
             ports: [
                 {
-                    portId: idNameTop[i], tool: idNameTop[i], color: "transparent", figure: "Rectangle", sizePort: new go.Size(20, 20), margin: new go.Margin(0, 0, 0, 0)
+                    portId: idNameTop[i], tool: idNameTop[i], color: "transparent", figure: "Rectangle", sizePort: new go.Size(20,20), margin: new go.Margin(0, 0, 0, 0)
                 }
             ]
         });
@@ -157,6 +159,7 @@ function createPortsUltrasonicSensor() {
         portId: "top",
         size: new go.Size(110, 20),
         position: new go.Point(12.5, 263),
+        
         //background: "yellow",
         ports: [
             {

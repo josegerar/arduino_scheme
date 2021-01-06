@@ -12,6 +12,57 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
+//function SpotLinkingTool() {
+//    go.LinkingTool.call(this);
+//}
+//go.Diagram.inherit(SpotLinkingTool, go.LinkingTool);
+
+function insertLink(fromnode, fromport, tonode, toport) {
+    var link = go.LinkingTool.prototype.insertLink.call(this, fromnode, fromport, tonode, toport);
+    if (link !== null) {
+        var port;
+        if (this.isForwards) {
+            port = toport;
+        } else {
+            port = fromport;
+        }
+        var portb = new go.Rect(port.getDocumentPoint(go.Spot.TopLeft),
+                port.getDocumentPoint(go.Spot.BottomRight));
+        var lp = link.getLinkPointFromPoint(port.part, port, port.getDocumentPoint(go.Spot.Center),
+                this.diagram.lastInput.documentPoint, !this.isForwards);
+        var spot = new go.Spot((lp.x - portb.x) / (portb.width || 1), (lp.y - portb.y) / (portb.height || 1));
+        if (this.isForwards) {
+            link.toSpot = spot;
+        } else {
+            link.fromSpot = spot;
+        }
+    }
+    return link;
+}
+
+//function SpotRelinkingTool() {
+//    go.RelinkingTool.call(this);
+//}
+//go.Diagram.inherit(SpotRelinkingTool, go.RelinkingTool);
+
+function  reconnectLink(link, newnode, newport, toend) {
+    go.RelinkingTool.prototype.reconnectLink.call(this, link, newnode, newport, toend);
+    if (link !== null) {
+        var port = newport;
+        var portb = new go.Rect(port.getDocumentPoint(go.Spot.TopLeft),
+                port.getDocumentPoint(go.Spot.BottomRight));
+        var lp = link.getLinkPointFromPoint(port.part, port, port.getDocumentPoint(go.Spot.Center),
+                this.diagram.lastInput.documentPoint, !toend);
+        var spot = new go.Spot((lp.x - portb.x) / (portb.width || 1), (lp.y - portb.y) / (portb.height || 1));
+        if (toend) {
+            link.toSpot = spot;
+        } else {
+            link.fromSpot = spot;
+        }
+    }
+    return link;
+}
+
 //Inicializar el diagrama 
 function initDiagram(json) {
     // diagram.isReadOnly = true; // solo lectura
@@ -19,16 +70,64 @@ function initDiagram(json) {
     myDiagram = goJs(go.Diagram, "lienzo", {
         padding: 20,
         allowCopy: false,
+//        linkingTool: SpotLinkingTool,
+//          relinkingTool: SpotRelinkingTool,
         "animationManager.isEnabled": false,
         "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
         //initialAutoScale: go.Diagram.Uniform,
         //initialContentAlignment: go.Spot.Center,
+        // override the link creation process
+//        "relinkingTool.reconnectLink": function (link, newnode, newport, toend) {
+//            go.RelinkingTool.prototype.reconnectLink.call(this, link, newnode, newport, toend);
+//            if (link !== null) {
+//                var port = newport;
+//                var portb = new go.Rect(port.getDocumentPoint(go.Spot.TopLeft),
+//                        port.getDocumentPoint(go.Spot.BottomRight));
+//                var lp = link.getLinkPointFromPoint(port.part, port, port.getDocumentPoint(go.Spot.Center),
+//                        this.diagram.lastInput.documentPoint, !toend);
+//                var spot = new go.Spot((lp.x - portb.x) / (portb.width || 1), (lp.y - portb.y) / (portb.height || 1));
+//                console.log(spot);
+//                if (toend) {
+//                    link.toSpot = spot;
+//                } else {
+//                    link.fromSpot = spot;
+//                }
+//            }
+//            return link;
+//        },
+        "linkingTool.insertLink": function (fromnode, fromport, tonode, toport) {
+            var link = go.LinkingTool.prototype.insertLink.call(this, fromnode, fromport, tonode, toport);
+            if (link !== null) {
+                var port;
+                if (this.isForwards) {
+                    port = toport;
+                } else {
+                    port = fromport;
+                }
+                var portb = new go.Rect(port.getDocumentPoint(go.Spot.TopLeft),
+                        port.getDocumentPoint(go.Spot.BottomRight));
+                var lp = link.getLinkPointFromPoint(port.part, port, port.getDocumentPoint(go.Spot.Center),
+                        this.diagram.lastInput.documentPoint, !this.isForwards);
+                var spot = new go.Spot((lp.x - portb.x) / (portb.width || 1), (lp.y - portb.y) / (portb.height || 1));
+                spot.F > spot.G ? (spot.F = spot.F / 2) : (spot.G = spot.G / 2);
+                //var spot = new go.Spot(1, 1);
+                console.log({link: link, newspot: spot, lp: lp, newport: portb, tospot: link.toSpot, fromspot: link.fromSpot});
+                if (this.isForwards) {
+                    link.toSpot = spot;
+                } else {
+                    link.fromSpot = spot;
+                }
+            }
+            return link;
+        },
         scale: 0.5, // extra space when scrolled all the way
         grid: goJs(go.Panel, "Grid", // a simple 10x10 grid
                 goJs(go.Shape, "LineH", {stroke: "lightgray", strokeWidth: 0.5}),
                 goJs(go.Shape, "LineV", {stroke: "lightgray", strokeWidth: 0.5})
                 )});
     myDiagram.layoutDiagram(false);
+    //diagram.toolManager.linkingTool.insertLink = insertLink;
+    //diagram.toolManager.relinkingTool.reconnectLink = reconnectLink;
     //myDiagram.layout = new go.GridLayout();
     //myDiagram.layout.isInitial = false;
     //myDiagram.layout.isOngoing  = false;
@@ -127,7 +226,8 @@ function initDiagram(json) {
                                                                     goJs(go.Panel,
                                                                             {
                                                                                 portId: "",
-                                                                                fromSpot: go.Spot.AllSides, toSpot: go.Spot.AllSides,
+                                                                                //fromSpot: go.Spot.AllSides, toSpot: go.Spot.AllSides,
+                                                                                //locationSpot: go.Spot.Center,
                                                                                 fromLinkable: true, toLinkable: true,
                                                                                 toLinkableDuplicates: true,
                                                                                 fromLinkableDuplicates: true,
@@ -258,10 +358,10 @@ function initDiagram(json) {
 
     myDiagram.mouseDrop = function (e) {
         //console.log(myDiagram.model.part)
-        console.log(myDiagram.selection);
-        console.log(myDiagram.model.nodeDataArray);
-        console.log(myDiagram.model.nodeDataArray[myDiagram.model.nodeDataArray.length - 1]);
-        angular.element($('[ng-controller="controllerWork"]')).scope().sendModel();
+//        console.log(myDiagram.selection);
+//        console.log(myDiagram.model.nodeDataArray);
+//        console.log(myDiagram.model.nodeDataArray[myDiagram.model.nodeDataArray.length - 1]);
+//        angular.element($('[ng-controller="controllerWork"]')).scope().sendModel();
     };
 //    console.log(json);
 //    debugger;
@@ -284,16 +384,16 @@ function initDiagram(json) {
                 window.console.log(tx.toString());
                 tx.changes.each(function (c) {
                     // consider which ChangedEvents to record
-                    if (c.model) {
-                        var nameProject = $("#nameystem").text();
-                        console.log(nameProject);
-                        if (!nameProject.includes("*")) {
-                            document.getElementById("nameystem").innerHTML += "*";
-                        }
-                        angular.element($('[ng-controller="controllerWork"]')).scope().sendModel();
-                        console.log(myDiagram.model.linkDataArray);
-                        window.console.log("  " + c.toString());
-                    }
+//                    if (c.model) {
+//                        var nameProject = $("#nameystem").text();
+//                        console.log(nameProject);
+//                        if (!nameProject.includes("*")) {
+//                            document.getElementById("nameystem").innerHTML += "*";
+//                        }
+//                        angular.element($('[ng-controller="controllerWork"]')).scope().sendModel();
+//                        console.log(myDiagram.model.linkDataArray);
+//                        window.console.log("  " + c.toString());
+//                    }
                 });
             }
         }
