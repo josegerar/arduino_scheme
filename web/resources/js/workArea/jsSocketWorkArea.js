@@ -29,13 +29,13 @@ function onClose(evt) {
 }
 
 function MessageSend(obj) {
-    console.log("enviando...");
+    //console.log("enviando...");
     let objmsg = JSON.stringify(obj);
     if (objmsg.length <= 10000450)
     {
         webSocket.send(objmsg);
-        console.log("enviand mensaje:sock");
-        console.log(obj);
+      //  console.log("enviand mensaje:sock");
+        //console.log(obj);
     } else {
         alertAll({status: 4, information: "The message exceeds the limit."});
     }
