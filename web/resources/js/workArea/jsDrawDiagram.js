@@ -27,7 +27,24 @@ function initDiagram(json) {
         grid: goJs(go.Panel, "Grid", // a simple 10x10 grid
                 goJs(go.Shape, "LineH", {stroke: "lightgray", strokeWidth: 0.5}),
                 goJs(go.Shape, "LineV", {stroke: "lightgray", strokeWidth: 0.5})
-                )});
+                ),
+        // a Changed listener on the Diagram.model
+//        "ModelChanged": function (e) {
+//            if (e.isTransactionFinished) {
+//                var tx = e.object;
+//                if (tx instanceof go.Transaction && window.console) {
+//                    var nameProject = $("#nameystem").text();
+//                    //console.log(nameProject);
+//                    if (!nameProject.includes("*")) {
+//                        document.getElementById("nameystem").innerHTML += "*";
+//                    }
+//                    //angular.element($('[ng-controller="controllerWork"]')).scope().sendModel();
+//                }
+//            }
+//
+//
+//        }
+    });
     myDiagram.layoutDiagram(false);
 
     nodeMenu =
@@ -197,7 +214,7 @@ function initDiagram(json) {
     myDiagram.mouseDrop = function (e) {
         angular.element($('[ng-controller="controllerWork"]')).scope().sendModel();
     };
-    
+
     if (Object.keys(json.system[0].modelSystem).length > 0) {
         myDiagram.model = go.Model.fromJson(json.system[0].modelSystem);
         //return;
