@@ -1,7 +1,7 @@
 /* global GlobalApisLocation */
 
-// AUTOR: DUVAL
-// Collaborator: ANTHONY
+// AUTOR: 
+// Collaborator: 
 /** @namespace jsLogin
  * @description This file contains a set of methods that are of global interest to the application.
  */
@@ -92,29 +92,27 @@ function onSignIn(googleUser) {
         let processname = profile.getName().toString().split(" ");
         let name_ = profile.getName();
         let lastName_ = "";
-        
+
         if (processname.length === 1)
         {
-            
-            name_ = processname[0] === undefined ? "" :processname[0];
+
+            name_ = processname[0] === undefined ? "" : processname[0];
             lastName_ = "Nothing last name";
-        }
-        else
+        } else
         if (processname.length === 2)
         {
-            name_ = processname[0] === undefined ? "" :processname[0];
-            lastName_ = processname[1] === undefined ? "" :processname[1];
+            name_ = processname[0] === undefined ? "" : processname[0];
+            lastName_ = processname[1] === undefined ? "" : processname[1];
         } else
         {
             if (processname.length === 3)
             {
-                name_ = processname[0] === undefined ? "" :processname[0] + " " + processname[1] === undefined ? "" :processname[1];
-                lastName_ = processname[2] === undefined ? "" :processname[2];
-            }
-            else
+                name_ = processname[0] === undefined ? "" : processname[0] + " " + processname[1] === undefined ? "" : processname[1];
+                lastName_ = processname[2] === undefined ? "" : processname[2];
+            } else
             {
-                name_ = processname[0] === undefined ? "" :processname[0] + " " + processname[1] === undefined ? "" :processname[1];
-                lastName_ = processname[2] === undefined ? "" :processname[2] + " " + processname[3] === undefined ? "" :processname[3];
+                name_ = processname[0] === undefined ? "" : processname[0] + " " + processname[1] === undefined ? "" : processname[1];
+                lastName_ = processname[2] === undefined ? "" : processname[2] + " " + processname[3] === undefined ? "" : processname[3];
             }
         }
         $("#api_name").html(name_);
@@ -123,7 +121,21 @@ function onSignIn(googleUser) {
         $("#api_pwd").val(profile.getId());
         $("#api_img").attr("src", profile.getImageUrl());
         console.log($("#api_pwd").val());
-        openRegisterModal();
+        let prom = LogIng2({'usr': $("#api_email").html(), 'pwd': $("#api_pwd").val()});
+        $.when(prom).done(function (result) {
+            console.log(result);
+            if (result.status === 4 && globalobject.base64flex !== undefined)
+            {
+               openRegisterModal();
+            } else if (result.status === 2) {
+                store.session.set("usereacircuits", result.data);
+                location.href = "home.html";
+            } else
+            {
+                allMessageXD(result);
+            }
+        });
+
     } else {
         globalobject.flagApis = true;
     }
@@ -279,7 +291,8 @@ $("#btnAPIregister").click(function () {
                     name: $("#api_name").html(),
                     lastname: $("#api_lastname").html(),
                     email: $("#api_email").html(),
-                    pass: $("#api_pwd").val(),
+                    pass: $("#passUser").val(),
+                    pwdgoogle: $("#api_pwd").val(),
                     img: usrl
                 };
                 console.log(regobj);
@@ -337,6 +350,7 @@ function LogIng2(obj) {
 
 function registorFromAPI(objectUsr)
 {
+    var a = 1;
     return $.ajax({
         method: "POST",
         dataType: "json",
@@ -361,18 +375,18 @@ $("#btnResendCode").click(function () {
     //console.log($("#formLogin").serialize());
     //console.log("Hola");
     resendCode({
-           usr: $("#emailLog").val()
+        usr: $("#emailLog").val()
     });
 });
 function resendCode(object)
 {
-    
+
     return $.ajax({
         method: "POST",
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         url: GlobalApisLocation + "userApis/resendCodeVerify",
-        data: JSON.stringify({"email": object.usr }),
+        data: JSON.stringify({"email": object.usr}),
         beforeSend: function () {
             loading();
         },
@@ -400,7 +414,7 @@ document.getElementById("api_img").onload = function () {
         canvas = null;
 //        document.body.appendChild(canvas);
 //        this.base64flex = canvas.toDataURL("image/png");
-        openRegisterModal();
+       
     }
 };
 
@@ -477,7 +491,7 @@ $("#btn_changepwd").click(function ()
         "pwd": $("#pwd_changepwd").val()
     };
     let flag = true;
-    console.log(object.email+":email:" + patternemvalid.test(object.email));
+    console.log(object.email + ":email:" + patternemvalid.test(object.email));
     if (!patternemvalid.test(object.email) && flag)
     {
         flag = false;
@@ -575,6 +589,6 @@ function proyectName() {
     return rutaAbsoluta;
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
     fastchangepwd();
 });
