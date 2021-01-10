@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="resources/js/jsLibrary/gojs.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="fff" style="width: 500px; height: 500px"></div>
+        <script>
+            var $ = go.GraphObject.make;
+            var diagram = $(go.Diagram, "fff");
+            diagram.nodeTemplate =
+                    $(go.Node, "Vertical",
+                            new go.Binding("location", "loc", go.Point.parse),
+                            $(go.Shape, "Rectangle",
+                                    {
+                                        fill: "white", portId: "",
+                                        fromSpot: new go.Spot(0.51, 0.51), toSpot: new go.Spot(0.51, 0.51),
+                                        fromEndSegmentLength: 0, toEndSegmentLength: 0
+                                    },
+                                    new go.Binding("fill", "color")),
+                            $(go.TextBlock,
+                                    {margin: 8},
+                                    new go.Binding("text"))
+                            );
+
+            diagram.model = new go.GraphLinksModel(
+                    [
+                        {key: 1, text: "Alpha", color: "lightblue", loc: "0 50"},
+                        {key: 2, text: "Beta", color: "orange", loc: "150 0"},
+                        {key: 3, text: "Gamma", color: "lightgreen", loc: "300 50"}
+                    ],
+                    [
+                        {from: 1, to: 2},
+                        {from: 2, to: 3}
+                    ]);
+        </script>
+    </body>
+</html>

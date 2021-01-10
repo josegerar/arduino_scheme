@@ -719,7 +719,7 @@ app.controller('controllerHome', function ($scope, $http) {
                 dateCreationProject: $scope.dataShareProjectsConfirm[position].creationdate_project,
                 idProject: $scope.dataShareProjectsConfirm[position].projects_id_pr
             };
-            var share_users = $scope.dataProjects[position].share_users;
+            var share_users = $scope.dataShareProjectsConfirm[position].share_users;
             $scope.tableEmailShareProjects = [];
             share_users.forEach((item, index) => {
                 console.log(item);
