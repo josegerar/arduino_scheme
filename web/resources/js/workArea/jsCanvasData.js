@@ -591,6 +591,13 @@ void loop()\n\
         updateCodeEditor();
         updateShina($scope.jsonCode);
     };
+    
+   $scope.deletePort = function (position) {
+        $scope.jsonCode[0].variables.splice(position, 1);
+        console.log(position);
+        updateCodeEditor();
+        updateShina($scope.jsonCode);
+    };
 
     // funcion para ser llamada desde el scope de angular
     function addVariables(obj) {
