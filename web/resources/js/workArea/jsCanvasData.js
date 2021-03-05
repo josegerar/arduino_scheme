@@ -694,7 +694,7 @@ void loop()\n\
                     $("#selectPA" + $scope.arrayParameters[position].port).val() === "analogWrite") {
                 $scope.jsonCode[1].pinMode.push({
                     valueWriteRaad: $("#selectPA" + $scope.arrayParameters[position].port).val() + "(" + $scope.arrayParameters[position].port + ",255);",
-                    pinModePort: "pinMode(" + $scope.arrayParameters[position].port + ",OUTPUT);,",
+                    pinModePort: "pinMode(" + $scope.arrayParameters[position].port + ",OUTPUT);",
                     namePort: $scope.arrayParameters[position].port,
                     out_inp: true
                 });
@@ -946,7 +946,10 @@ void loop()\n\
 
     //funcion para agregar las condiciones en los if en los if nuevos
     $scope.addCondition = function () {
-        $scope.jsonCode[2].logic.push({
+     console.log($("#selectOperation option:selected").text());
+        if($("#selectOperation option:selected").text()!==("---"))
+        {
+            $scope.jsonCode[2].logic.push({
             "do": "",
             "if": validateIf(0),
             "doif": [],
@@ -955,6 +958,9 @@ void loop()\n\
         console.log($scope.jsonCode[2].logic);
         updateCodeEditor();
         updateShina($scope.jsonCode);
+    }
+        
+        
     };
 
     //agregar nuevas condicionesa  un if seleccionado
